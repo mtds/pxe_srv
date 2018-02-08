@@ -10,9 +10,9 @@ configure do
        # Read the server config from a YAML file:
        yml_config=YAML.load_file('pxe_srv.yml')
        # Sets the document root for serving static files:
-       set :public_dir, "\'#{yml_config['SrvConfig']['public_dir']}\'"
+       set :public_dir, "#{yml_config['SrvConfig']['public_dir']}"
        # Sets the 'views' directory for erb templates:
-       set :views, "\'#{yml_config['SrvConfig']['views']}\'"
+       set :views, "#{yml_config['SrvConfig']['views']}"
        # Do not show exceptions
        set :show_exceptions, false
     else
@@ -37,11 +37,11 @@ get '/menu' do
   remote_host = request.env['REMOTE_HOST']
 
   # Is there a symlink pointing to a specific file?
-  if File.symlink?("static/#{remote_host}")
-    File.delete("static/#{remote_host}")
-    send_file('static/test')
+  if File.symlink?(settings.public_dir + "/#{remote_host}")
+    File.delete(settings.public_dir + "/#{remote_host}")
+    send_file(settings.public_dir + '/test')
   else
-    send_file('static/menu.ipxe')
+    send_file(settings.public_dir + '/menu.ipxe')
   end
 
 end
@@ -52,6 +52,7 @@ end
 
 # Default route:
 get '/pxelinux.cfg/default' do
+  send_file(settings.public_dir + '/pxelinux.cfg/default')
 end
 
 # ERB template installation:
