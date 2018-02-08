@@ -54,3 +54,8 @@ end
 get '/pxelinux.cfg/:name' do
 end
 
+# Gracefully handle 404 errors:
+not_found do
+  "The requested route is not available"
+end
+
