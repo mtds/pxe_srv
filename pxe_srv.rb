@@ -3,14 +3,22 @@
 require 'erb'
 require 'pp'
 require 'sinatra'
+require 'yaml'
 
 configure do
-    # Sets the document root for serving static files:
-    set :public_dir, '/home/dessalvi/src/Ruby/Sinatra_tests/PXE_Srv/static'
-    # Sets the 'views' directory for erb templates:
-    set :views, '/home/dessalvi/src/Ruby/Sinatra_tests/PXE_srv/views'
-    # Do not show exceptions
-    set :show_exceptions, false
+    if File.exists?('pxe_srv.yml')
+       # Read the server config from a YAML file:
+       yml_config=YAML.load_file('pxe_srv.yml')
+       # Sets the document root for serving static files:
+       set :public_dir, "\'#{yml_config['SrvConfig']['public_dir']}\'"
+       # Sets the 'views' directory for erb templates:
+       set :views, "\'#{yml_config['SrvConfig']['views']}\'"
+       # Do not show exceptions
+       set :show_exceptions, false
+    else
+       puts "'pxe_srv.yml' missing in the srv root directory! Exiting..."
+       exit 1
+    end
 end
 
 # Server will always return contents in text format:
@@ -25,12 +33,10 @@ end
 # Basic route name as configured in the 'Filename' option on the DHCP server.
 get '/menu' do
 
-  # if there's a symlink (IP from the machine) to a different file will serve that one
-  # otherwise will get to the default 'boot from disk'.
-
   # Extract the (fqdn) hostname from the HTTP request:
   remote_host = request.env['REMOTE_HOST']
 
+  # Is there a symlink pointing to a specific file?
   if File.symlink?("static/#{remote_host}")
     File.delete("static/#{remote_host}")
     send_file('static/test')
@@ -38,8 +44,6 @@ get '/menu' do
     send_file('static/menu.ipxe')
   end
 
-  # Grab the hostname and remove the domain name:
-  #pp request.env['REMOTE_HOST'].split(".")[0]
 end
 
 #
