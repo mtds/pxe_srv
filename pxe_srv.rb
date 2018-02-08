@@ -32,15 +32,14 @@ get '/menu' do
   remote_host = request.env['REMOTE_HOST']
 
   if File.symlink?("static/#{remote_host}")
-    send_file('static/test')
     File.delete("static/#{remote_host}")
+    send_file('static/test')
   else
     send_file('static/menu.ipxe')
   end
 
   # Grab the hostname and remove the domain name:
   #pp request.env['REMOTE_HOST'].split(".")[0]
-
 end
 
 #
