@@ -19,6 +19,10 @@ configure do
     puts "'pxe_srv.yml' missing in the srv root directory! Exiting..."
     exit 1
   end
+  # Log to file (ref: http://recipes.sinatrarb.com/p/middleware/rack_commonlogger)
+  file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
+  file.sync = true
+  use Rack::CommonLogger, file
 end
 
 # Server will always return contents in text format:
