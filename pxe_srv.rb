@@ -40,11 +40,16 @@ get '/menu' do
   # Extract the IP of the hostname from the HTTP request:
   remote_host_ip = request.env['REMOTE_HOST']
 
-  # Is there a symlink pointing to a specific file?
-  if File.symlink?(settings.public_dir + "/#{remote_host_ip}")
+  # Build the symlink string:
+  symlink_pxe = settings.public_dir + "/#{remote_host_ip}"
+
+  # Verify wheter the symlink exist and it's not broken:
+  if File.exist?(symlink_pxe) && File.symlink?(symlink_pxe)
     File.delete(settings.public_dir + "/#{remote_host_ip}")
     send_file(settings.public_dir + '/test')
   else
+    # When there's no symlink for the host contacting this server, then always
+    # return a default iPXE file:
     send_file(settings.public_dir + '/menu.ipxe')
   end
 
