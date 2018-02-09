@@ -37,12 +37,12 @@ end
 # Basic route name as configured in the 'Filename' option on the DHCP server.
 get '/menu' do
 
-  # Extract the (fqdn) hostname from the HTTP request:
-  remote_host = request.env['REMOTE_HOST']
+  # Extract the IP of the hostname from the HTTP request:
+  remote_host_ip = request.env['REMOTE_HOST']
 
   # Is there a symlink pointing to a specific file?
-  if File.symlink?(settings.public_dir + "/#{remote_host}")
-    File.delete(settings.public_dir + "/#{remote_host}")
+  if File.symlink?(settings.public_dir + "/#{remote_host_ip}")
+    File.delete(settings.public_dir + "/#{remote_host_ip}")
     send_file(settings.public_dir + '/test')
   else
     send_file(settings.public_dir + '/menu.ipxe')
