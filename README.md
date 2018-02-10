@@ -2,21 +2,25 @@
 
 This small Ruby script will use the Sinatra web framework to serve static files over HTTP.
 
-The server will answer the following HTTP requests, everything else will throw an error:
-* ``/menu``: corresponds to an IPXE config file;
-* ``/hostname.fqdn``: this entry will be created on the fly only for specific purpose and will point to specific files with a symbolic link;
+The server will answer the following HTTP requests, everything else will throw an ``404`` error:
+* ``/menu``: corresponds to an IPXE config file (``menu.ipxe``);
+* ``/IP``: this entry will be created on the fly only for specific purposes and will point to specific files with a symbolic link;
 * ``/pxelinux.cfg/default``: default menu for a pxelinux config boot (for hosts which **does not** support iPXE);
 * ``/pxelinux.cfg/:name``: pxelinux config boot customized as an ERB template.
 
-## Workflow
+* The server is designed to serve static files from a specific subfolder, defined in the configuration file.
+* ``pxelinux`` configuration files should be under the ``pxelinux.cfg`` directory.
 
-The server is designed to serve static files from a specific subfolder, defined in the configuration file. ``pxelinux`` configuration files should be under the ``pxelinux.cfg`` directory.
+### Serve iPXE files
 
-### Node reinstallation with iPXE
-1. use ``nodeset`` + bash script to create a bunch of symbolic links pointing to a specific iPXE file.
-2. once the node is rebooted it will contact the Sinatra server, which will verify if the node hostname is matching the symbolic link.
-3. if the match is correct, then we will serve a tailored iPXE file.
-4. otherwise the Sinatra server will serve a default file.
+* Define the DHCP option ``filename`` as follows: ``http://myserver:myport/menu``
+* Whenever a booting node will contact this server with the previos request, it will receive by **default** a ``menu.ipxe`` file.
+
+In case the node needs to grab a specific iPXE file then you should do the following:
+1. create a symbolic link (in the form of IP address of the booting node) pointing to a specific iPXE file.
+2. once the node is rebooted it will contact the Sinatra server, which will verify if the node IP is matching the symbolic link.
+3. if the match is correct, then we will serve a iPXE file.
+4. otherwise the Sinatra server will serve a default menu file.
 
 ## Configuration File
 
