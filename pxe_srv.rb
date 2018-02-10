@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'erb'
+require 'pathname'
 require 'pp'
 require 'sinatra'
 require 'yaml'
@@ -43,10 +44,12 @@ get '/menu' do
   # Build the symlink string:
   symlink_pxe = settings.public_dir + "/#{remote_host_ip}"
 
-  # Verify wheter the symlink exist and it's not broken:
+  # Verify whether the symlink exist and it's not broken:
   if File.exist?(symlink_pxe) && File.symlink?(symlink_pxe)
-    File.delete(settings.public_dir + "/#{remote_host_ip}")
-    send_file(settings.public_dir + '/test')
+    # Extract the filename pointed by the symlink:
+    pxefile = File.readlink(Pathname.new(symlink_pxe).expand_path)
+    File.delete(symlink_pxe) # remove the symlink
+    send_file(settings.public_dir + '/' + pxefile)
   else
     # When there's no symlink for the host contacting this server, then always
     # return a default iPXE file:
