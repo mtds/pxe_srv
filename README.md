@@ -22,6 +22,12 @@ In case the node needs to grab a specific iPXE file then you should do the follo
 3. if the match is correct, then we will serve a iPXE file.
 4. otherwise the Sinatra server will serve a default menu file.
 
+There's an **helper script** available, called `create_symlink.rb` which will help to create as many symlinks as necessary.  
+It can be used in combination to ``nodeset`` (part of ``clustershell``) in the following way:
+```
+nodeset --expand node[1-4].mydomain | ruby create_symlink.rb -f /some/file
+```
+
 ## Configuration File
 
 It's in YAML format. An example:
