@@ -25,8 +25,10 @@ In case the node needs to grab a specific iPXE file then you should do the follo
 There's an **helper script** available, called `create_symlink.rb` which will help to create as many symlinks as necessary.  
 It can be used in combination to ``nodeset`` (part of ``clustershell``) in the following way:
 ```
-nodeset --expand node[1-4].mydomain | ruby create_symlink.rb -f /some/file
+nodeset --expand node[1-4].mydomain | ruby create_symlink.rb -f /some/file.ipxe
 ```
+References:
+* [Nodeset](https://clustershell.readthedocs.io/en/latest/tools/nodeset.html)
 
 ## Configuration File
 
