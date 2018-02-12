@@ -20,6 +20,10 @@ configure do
     puts "'pxe_srv.yml' missing in the srv root directory! Exiting..."
     exit 1
   end
+  # Check if 'log' subdir is available:
+  if !File.directory? "#{settings.root}/log"
+    Dir.mkdir "#{settings.root}/log"
+  end
   # Log to file (ref: http://recipes.sinatrarb.com/p/middleware/rack_commonlogger)
   file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
   file.sync = true
