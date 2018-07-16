@@ -11,6 +11,14 @@ The server will answer the following HTTP requests, everything else will throw a
 * The server is designed to serve static files from a specific subfolder, defined in the configuration file.
 * ``pxelinux`` configuration files should be under the ``pxelinux.cfg`` directory.
 
+```bash
+# build a docker container image
+docker build -t pxesrv .
+# start the container
+docker run -d --name pxesrv --volume /srv/pxesrv:/srv/pxesrv pxesrv
+```
+
+
 ### Serve iPXE files
 
 * Define the DHCP option ``filename`` as follows: ``http://myserver:myport/menu``
@@ -34,10 +42,11 @@ References:
 
 It's in YAML format. An example:
 ```
-SrvConfig:
-  public_dir: /srv/pxe_srv/static
+config:
+  public: /srv/pxe_srv/static
   views: /srv/pxe_srv/views
 ```
 
 **NOTE**: YAML is sensible to indentation!! See the example file in the repo.
+
 

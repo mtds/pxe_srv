@@ -7,27 +7,52 @@ require 'sinatra'
 require 'yaml'
 
 configure do
-  if File.exists?('pxe_srv.yml')
-     # Read the server config from a YAML file:
-     yml_config=YAML.load_file('pxe_srv.yml')
-     # Sets the document root for serving static files:
-     set :public_dir, "#{yml_config['SrvConfig']['public_dir']}"
-     # Sets the 'views' directory for erb templates:
-     set :views, "#{yml_config['SrvConfig']['views']}"
-     # Do not show exceptions
-     set :show_exceptions, false
+
+  config_env = 'PXESRV_CONF'
+  if ENV.has_key? config_env
+    config_file = ENV[config_env]
   else
-    puts "'pxe_srv.yml' missing in the srv root directory! Exiting..."
+    $stderr.puts "#{config_env} not defined in environment"
     exit 1
   end
-  # Check if 'log' subdir is available:
-  if !File.directory? "#{settings.root}/log"
-    Dir.mkdir "#{settings.root}/log"
+
+  if File.exists? config_file
+
+     # Parse the configuration file
+     config=YAML.load_file(config_file)
+
+     public_path = config['config']['public']
+     if not File.directory? public_path
+       $stderr.puts "#{public_path} is missing"
+       exit 1
+     end
+
+     views_path = config['config']['views']
+     if not File.directory? views_path
+       $stderr.puts "#{views_path} is missing"
+       exit 1
+     end
+
   end
+
+  # Sets the document root for serving static files:
+  set :public_dir, public_path
+  # Sets the 'views' directory for erb templates:
+  set :views, views_path
+  # Do not show exceptions
+  set :show_exceptions, false
+
+  # default location of the service log
+  log_file = '/var/log/pxesrv.log'
+  # an environment variable may define an alternative 
+  log_env = 'PXESRV_LOG'
+  log_file = ENV[log_env] if ENV.has_key? log_env
+
   # Log to file (ref: http://recipes.sinatrarb.com/p/middleware/rack_commonlogger)
-  file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
-  file.sync = true
-  use Rack::CommonLogger, file
+  log_handel = File.new(log_file, 'a+')
+  log_handel.sync = true
+  use Rack::CommonLogger, log_handel
+
 end
 
 # Server will always return contents in text format:
