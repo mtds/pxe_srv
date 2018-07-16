@@ -12,8 +12,15 @@ The server will answer the following HTTP requests, everything else will throw a
 * ``pxelinux`` configuration files should be under the ``pxelinux.cfg`` directory.
 
 ```bash
+# for development and testing
+PXESRV_LOG=/tmp/pxesrv.log PXESRV_ROOT=$PWD $PWD/pxesrv
+```
+
+Build and run as a docker container:
+
+```bash
 # build a docker container image
-docker build -t pxesrv .
+docker build -t pxesrv $PWD
 # start the container
 docker run -d --name pxesrv --volume /srv/pxesrv:/srv/pxesrv pxesrv
 ```
@@ -43,8 +50,8 @@ References:
 It's in YAML format. An example:
 ```
 config:
-  public: /srv/pxe_srv/static
-  views: /srv/pxe_srv/views
+  public: /srv/pxesrv/static
+  views: /srv/pxesrv/views
 ```
 
 **NOTE**: YAML is sensible to indentation!! See the example file in the repo.

@@ -8,31 +8,39 @@ require 'yaml'
 
 configure do
 
+  config_file = nil
   config_env = 'PXESRV_CONF'
   if ENV.has_key? config_env
     config_file = ENV[config_env]
-  else
-    $stderr.puts "#{config_env} not defined in environment"
-    exit 1
   end
 
-  if File.exists? config_file
+  root_path = nil
+  root_env = 'PXESRV_ROOT'
+  if ENV.has_key? root_env
+    root_path = ENV[root_env]
+  end
 
-     # Parse the configuration file
-     config=YAML.load_file(config_file)
+  # configuration file takes precedents 
+  if not config_file.nil?
+    # Parse the configuration file
+    config=YAML.load_file(config_file)
+    public_path = config['config']['public']
+    views_path = config['config']['views']
+  # if the service root path has been defined
+  elsif not root_path.nil?
+    public_path = "#{root_path}/public"
+    views_path = "#{root_path}/views"
+  else
+    $stderr.puts "Make sure to use a configuration file or environment variable to specify the document roots"
+  end
 
-     public_path = config['config']['public']
-     if not File.directory? public_path
-       $stderr.puts "#{public_path} is missing"
-       exit 1
-     end
-
-     views_path = config['config']['views']
-     if not File.directory? views_path
-       $stderr.puts "#{views_path} is missing"
-       exit 1
-     end
-
+  if not File.directory? public_path
+    $stderr.puts "#{public_path} is missing"
+    exit 1
+  end
+  if not File.directory? views_path
+    $stderr.puts "#{views_path} is missing"
+    exit 1
   end
 
   # Sets the document root for serving static files:

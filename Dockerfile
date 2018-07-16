@@ -4,9 +4,9 @@ RUN apt-get update
 RUN apt-get install -y ruby-sinatra
 RUN apt-get clean
 
-ADD pxesrv.rb /opt/pxesrv/pxesrv.rb 
+ADD pxesrv /opt/pxesrv/pxesrv
 ADD pxesrv.yml /etc/pxesrv.yml 
 
 EXPOSE 4567
 
-CMD PXESRV_CONF=/etc/pxesrv.yml ruby /opt/pxesrv/pxesrv.rb
+CMD PXESRV_CONF=/etc/pxesrv.yml /opt/pxesrv/pxesrv
