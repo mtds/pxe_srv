@@ -90,7 +90,7 @@ get '/menu' do
   else
     # When there's no symlink for the host contacting this server, then always
     # return a default iPXE file:
-    send_file(settings.public_dir + '/menu.ipxe')
+    send_file(settings.public_dir + '/menu')
   end
 
 end
@@ -106,6 +106,9 @@ end
 
 # ERB template installation:
 get '/pxelinux.cfg/:name' do
+  @ip = request.ip
+  @hostname = request.env['REMOTE_HOST'].split(".")[0]
+  logger.info "ip=#{@ip} hostname=#{@hostname}"
 end
 
 # Gracefully handle 404 errors:
