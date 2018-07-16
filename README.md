@@ -12,8 +12,15 @@ The server will answer the following HTTP requests, everything else will throw a
 * ``pxelinux`` configuration files should be under the ``pxelinux.cfg`` directory.
 
 ```bash
-# for development and testing
-PXESRV_LOG=/tmp/pxesrv.log PXESRV_ROOT=$PWD $PWD/pxesrv
+# start the service for development and testing
+>>> PXESRV_LOG=/tmp/pxesrv.log PXESRV_ROOT=$PWD $PWD/pxesrv
+# start a VM to PXE boot from the service
+>>> vm-boot-pxe
+# use ctrl-b to drop into the shell
+# get an IP address
+iPXE> dhcp
+# 10.0.2.2 iss teh default gateway (aka the host)
+iPXE> chain http://10.0.2.2:4567/menu
 ```
 
 Build and run as a docker container:
