@@ -9,8 +9,10 @@ vm ex lxcm01 -r '
         # diable the firewall
         systemctl disable --now firewalld
         # install Git
-        yum install -q -y epel-release
-        yum install -q -y docker git bash-completion
+        yum install -y epel-release
+        yum install -y docker git bash-completion
+        # start the Docker service
+        systemctl enable --now docker
         # clone this repository
         git clone https://github.com/vpenso/pxesrv
         # load the repository environment on login

@@ -41,7 +41,13 @@ Build a container image using the [Dockerfile](Dockerfile) in this repository:
 # build a docker container image
 docker build -t pxesrv $PXESRV_PATH
 # start the container
-docker run --rm -dit --name pxesrv --volume $PXESRV_ROOT:/srv/pxesrv pxesrv
+docker run --rm \
+           --detach \
+           -it \
+           --name pxesrv \
+           --publish 4567:4567 \
+           --volume $PXESRV_ROOT:/srv/pxesrv \
+       pxesrv
 ```
 
 [01]: http://sinatrarb.com/ "Sinatra home-page"
