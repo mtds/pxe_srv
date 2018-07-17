@@ -1,3 +1,0 @@
-config:
-  public: /srv/pxesrv/public
-  views: /srv/pxesrv/views
