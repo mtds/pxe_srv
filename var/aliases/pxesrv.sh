@@ -3,3 +3,6 @@ PXESRV_LOG=/tmp/pxesrv.log
 
 export PXESRV_ROOT \
        PXESRV_LOG
+
+echo PXESRV_ROOT=$PXESRV_ROOT
+echo PXESRV_LOG=$PXESRV_LOG

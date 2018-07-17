@@ -9,8 +9,12 @@ PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 PXESRV_CONF       | Optional path to the PXESrv configuration file
 
 ```bash
-# start the service for development and testing
->>> PXESRV_LOG=/tmp/pxesrv.log PXESRV_ROOT=$PWD $PWD/pxesrv
+>>> source source_me.sh
+PXESRV_ROOT=/srv/projects/pxe_srv/public
+PXESRV_LOG=/tmp/pxesrv.log
+# start the service for development and testing in foreground
+>>> $PXESRV_PATH/pxesrv
+...
 # start a VM to PXE boot from the service
 >>> vm-boot-pxe
 # use ctrl-b to drop into the shell

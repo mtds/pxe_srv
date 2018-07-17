@@ -26,9 +26,14 @@ configure do
     exit 1
   end
 
+  default_response = "#{root_path}/default"
+  link_path = "#{root_path}/link"
+
   # Sets the document root for serving static files:
   set :root_path, root_path
-  set :default_response, "#{root_path}/default"
+  set :link_path, link_path
+  set :default_response, default_response
+
   # Do not show exceptions
   set :show_exceptions, false
 
@@ -43,6 +48,8 @@ configure do
   log_handel.sync = true
   use Rack::CommonLogger, log_handel
 
+  $stdout.puts "pxesrv_root=#{root_path} pxesrv_log=#{log_file}"
+  $stdout.puts "pxesrv_default_response=#{default_response} pxesrv_link_path#{link_path}"
 end
 
 # Server will always return contents in text format:
@@ -62,8 +69,8 @@ get '/redirect' do
   response = settings.default_response
 
   [
-    "#{settings.root_path}/link/#{host}", 
-    "#{settings.root_path}/link/#{ip}"
+    "#{settings.link_path}/#{host}", 
+    "#{settings.link_path}/#{ip}"
   ].each do |path|
     # Verify whether the symlink exist and it's not broken:
     if File.exist?(path) && File.symlink?(path)
