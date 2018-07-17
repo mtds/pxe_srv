@@ -1,15 +1,12 @@
-# Serving iPXE/pxelinux files over HTTP
+# PXESrv
 
-This small Ruby script will use the Sinatra web framework to serve static files over HTTP.
+HTTP server redirecting client request based on links to a target response file.
 
-The server will answer the following HTTP requests, everything else will throw an ``404`` error:
-* [public/menu.ipxe](public/menu.ipxe): example iPXE configuration
-* ``/IP``: this entry will be created on the fly only for specific purposes and will point to specific files with a symbolic link;
-* ``/pxelinux.cfg/default``: default menu for a pxelinux config boot (for hosts which **does not** support iPXE);
-* ``/pxelinux.cfg/:name``: pxelinux config boot customized as an ERB template.
-
-* The server is designed to serve static files from a specific subfolder, defined in the configuration file.
-* ``pxelinux`` configuration files should be under the ``pxelinux.cfg`` directory.
+Environment       | Description
+------------------|---------------------------
+PXESRV_ROOT       | Path to the HTTP server document root (i.e. [public/](public/))
+PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
+PXESRV_CONF       | Optional path to the PXESrv configuration file
 
 ```bash
 # start the service for development and testing
@@ -20,8 +17,18 @@ The server will answer the following HTTP requests, everything else will throw a
 # get an IP address
 iPXE> dhcp
 # 10.0.2.2 iss teh default gateway (aka the host)
-iPXE> chain http://10.0.2.2:4567/menu
+iPXE> chain http://10.0.2.2:4567/redirect
 ```
+
+By default the response is redirected to [$PXESRV_ROOT/default](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another configuration.
+
+```bash
+>>> ln -s $PXESRV_ROOT/centos $PXESRV_ROOT/link/127.0.0.1
+```
+
+
+
+
 
 Build and run as a docker container:
 
@@ -57,7 +64,7 @@ References:
 It's in YAML format. An example:
 ```
 config:
-  public: /srv/pxesrv/static
+  public: /srv/pxesrv/public
   views: /srv/pxesrv/views
 ```
 

@@ -37,4 +37,4 @@ goto start
 exit
 
 :centos
-chain centos.ipxe
+chain centos

@@ -20,33 +20,15 @@ configure do
     root_path = ENV[root_env]
   end
 
-  # configuration file takes precedents 
-  if not config_file.nil?
-    # Parse the configuration file
-    config=YAML.load_file(config_file)
-    public_path = config['config']['public']
-    views_path = config['config']['views']
   # if the service root path has been defined
-  elsif not root_path.nil?
-    public_path = "#{root_path}/public"
-    views_path = "#{root_path}/views"
-  else
-    $stderr.puts "Make sure to use a configuration file or environment variable to specify the document roots"
-  end
-
-  if not File.directory? public_path
-    $stderr.puts "#{public_path} is missing"
-    exit 1
-  end
-  if not File.directory? views_path
-    $stderr.puts "#{views_path} is missing"
+  if root_path.nil? or not File.directory? root_path
+    $stderr.puts "Make sure to set $PXESRV_ROOT"
     exit 1
   end
 
   # Sets the document root for serving static files:
-  set :public_dir, public_path
-  # Sets the 'views' directory for erb templates:
-  set :views, views_path
+  set :root_path, root_path
+  set :default_response, "#{root_path}/default"
   # Do not show exceptions
   set :show_exceptions, false
 
@@ -73,29 +55,27 @@ end
 #
 
 # Basic route name as configured in the 'Filename' option on the DHCP server.
-get '/menu' do
+get '/redirect' do
 
   ip = request.ip
   host = request.host
-
-  pub = settings.public_dir
-  target = "#{pub}/menu.ipxe"
+  response = settings.default_response
 
   [
-    "#{pub}/link/#{host}", 
-    "#{pub}/link/#{ip}"
+    "#{settings.root_path}/link/#{host}", 
+    "#{settings.root_path}/link/#{ip}"
   ].each do |path|
     # Verify whether the symlink exist and it's not broken:
     if File.exist?(path) && File.symlink?(path)
-      target = File.readlink(Pathname.new(path).expand_path)
+      response = File.readlink(Pathname.new(path).expand_path)
       File.delete(path) # remove the symlink
     else
       logger.info "Missing #{path}"
     end
   end
 
-  logger.info "Redirect ip=#{ip} hostname=#{host} to #{target}"
-  send_file(target)
+  logger.info "Redirect ip=#{ip} hostname=#{host} to #{response}"
+  send_file(response)
 
 end
 
