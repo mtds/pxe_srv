@@ -31,6 +31,8 @@ iPXE> chain http://10.0.2.2:4567/redirect
 # ...
 ```
 
+Cf. [Qemu Network Emulation][02]
+
 ### Docker Container
 
 Build a container image using the [Dockerfile](Dockerfile) in this repository:
@@ -43,3 +45,4 @@ docker run --rm -dit --name pxesrv --volume $PXESRV_ROOT:/srv/pxesrv pxesrv
 ```
 
 [01]: http://sinatrarb.com/ "Sinatra home-page"
+[02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
