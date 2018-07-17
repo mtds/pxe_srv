@@ -75,23 +75,27 @@ end
 # Basic route name as configured in the 'Filename' option on the DHCP server.
 get '/menu' do
 
-  # Extract the IP of the hostname from the HTTP request:
-  remote_host_ip = request.env['REMOTE_HOST']
+  ip = request.ip
+  host = request.host
 
-  # Build the symlink string:
-  symlink_pxe = settings.public_dir + "/#{remote_host_ip}"
+  pub = settings.public_dir
+  target = "#{pub}/menu.ipxe"
 
-  # Verify whether the symlink exist and it's not broken:
-  if File.exist?(symlink_pxe) && File.symlink?(symlink_pxe)
-    # Extract the filename pointed by the symlink:
-    pxefile = File.readlink(Pathname.new(symlink_pxe).expand_path)
-    File.delete(symlink_pxe) # remove the symlink
-    send_file(settings.public_dir + '/' + pxefile)
-  else
-    # When there's no symlink for the host contacting this server, then always
-    # return a default iPXE file:
-    send_file(settings.public_dir + '/menu')
+  [
+    "#{pub}/link/#{host}", 
+    "#{pub}/link/#{ip}"
+  ].each do |path|
+    # Verify whether the symlink exist and it's not broken:
+    if File.exist?(path) && File.symlink?(path)
+      target = File.readlink(Pathname.new(path).expand_path)
+      File.delete(path) # remove the symlink
+    else
+      logger.info "Missing #{path}"
+    end
   end
+
+  logger.info "Redirect ip=#{ip} hostname=#{host} to #{target}"
+  send_file(target)
 
 end
 
@@ -106,9 +110,6 @@ end
 
 # ERB template installation:
 get '/pxelinux.cfg/:name' do
-  @ip = request.ip
-  @hostname = request.env['REMOTE_HOST'].split(".")[0]
-  logger.info "ip=#{@ip} hostname=#{@hostname}"
 end
 
 # Gracefully handle 404 errors:

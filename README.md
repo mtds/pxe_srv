@@ -3,7 +3,7 @@
 This small Ruby script will use the Sinatra web framework to serve static files over HTTP.
 
 The server will answer the following HTTP requests, everything else will throw an ``404`` error:
-* ``/menu``: corresponds to an IPXE config file (``menu.ipxe``);
+* [public/menu.ipxe](public/menu.ipxe): example iPXE configuration
 * ``/IP``: this entry will be created on the fly only for specific purposes and will point to specific files with a symbolic link;
 * ``/pxelinux.cfg/default``: default menu for a pxelinux config boot (for hosts which **does not** support iPXE);
 * ``/pxelinux.cfg/:name``: pxelinux config boot customized as an ERB template.

@@ -8,7 +8,7 @@ vm-boot-pxe() {
         qemu-system-x86_64 \
                 -m 2G \
                 -drive file=$QEMU_DISK,if=virtio,cache=writeback \
-                -netdev user,id=n0,net=10.0.2.0/24 \
+                -netdev user,id=n0,ipv6=off,net=10.0.2.0/24,hostname=lxdev01 \
                 -device virtio-net,netdev=n0 \
                 -boot n \
                 -option-rom $QEMU_PXE_OPTION_ROM

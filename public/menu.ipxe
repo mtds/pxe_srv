@@ -37,11 +37,4 @@ goto start
 exit
 
 :centos
-set mirror http://mirror.centos.org/
-set repo ${mirror}/centos/7/os/x86_64
-kernel ${repo}/images/pxeboot/vmlinuz initrd=initrd.img ip=dhcp inst.repo=${repo} inst.text inst.sshd
-initrd ${repo}/images/pxeboot/initrd.img
-boot || goto shell
-
-
-chain http://boot.ipxe.org/ipxe.pxe
+chain centos.ipxe
