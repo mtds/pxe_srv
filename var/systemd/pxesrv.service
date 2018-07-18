@@ -1,0 +1,11 @@
+[Unit]
+Description=PXESrv boot service
+
+[Service]
+Environment="PXESRV_ROOT=/srv/pxesrv"
+ExecStart=/opt/pxesrv/pxesrv
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target

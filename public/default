@@ -1,0 +1,40 @@
+#!ipxe
+
+# Some menu defaults
+set menu-timeout 10000
+set submenu-timeout ${menu-timeout}
+isset ${menu-default} || set menu-default exit
+
+:start
+menu iPXE boot menu for ${initiator-iqn}
+
+item centos               Boot CentOS live system
+item --gap --             ------------------------- Advanced options -------------------------------
+item --key c config       Configure settings
+item shell                Drop to iPXE shell
+item reboot               Reboot computer
+item
+item --key x exit         Exit iPXE and continue BIOS boot
+choose --timeout ${menu-timeout} --default ${menu-default} selected || goto cancel
+set menu-timeout 0
+goto ${selected}
+
+:shell
+echo Type 'exit' to get the back to the menu
+shell
+set menu-timeout 0
+set submenu-timeout 0
+goto start
+
+:reboot
+reboot
+
+:config
+config
+goto start
+
+:exit
+exit
+
+:centos
+chain centos

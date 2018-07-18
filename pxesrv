@@ -1,0 +1,105 @@
+#!/usr/bin/env ruby
+
+require 'erb'
+require 'pathname'
+require 'pp'
+require 'sinatra'
+require 'yaml'
+
+configure do
+
+  # listen on all interfaces
+  set :bind, '0.0.0.0'
+
+  config_file = nil
+  config_env = 'PXESRV_CONF'
+  if ENV.has_key? config_env
+    config_file = ENV[config_env]
+  end
+
+  root_path = nil
+  root_env = 'PXESRV_ROOT'
+  if ENV.has_key? root_env
+    root_path = ENV[root_env]
+  end
+
+  # if the service root path has been defined
+  if root_path.nil? or not File.directory? root_path
+    $stderr.puts "Make sure to set $PXESRV_ROOT"
+    exit 1
+  end
+
+  default_response = "#{root_path}/default"
+  link_path = "#{root_path}/link"
+
+  # Sets the document root for serving static files:
+  set :root_path, root_path
+  set :link_path, link_path
+  set :default_response, default_response
+
+  # Do not show exceptions
+  set :show_exceptions, false
+
+  # default location of the service log
+  log_file = '/var/log/pxesrv.log'
+  # an environment variable may define an alternative 
+  log_env = 'PXESRV_LOG'
+  log_file = ENV[log_env] if ENV.has_key? log_env
+
+  # Log to file (ref: http://recipes.sinatrarb.com/p/middleware/rack_commonlogger)
+  log_handel = File.new(log_file, 'a+')
+  log_handel.sync = true
+  use Rack::CommonLogger, log_handel
+
+  $stdout.puts "pxesrv_root=#{root_path} pxesrv_log=#{log_file}"
+  $stdout.puts "pxesrv_default_response=#{default_response} pxesrv_link_path#{link_path}"
+end
+
+# Server will always return contents in text format:
+before do
+  content_type :txt
+end
+
+#
+# Installation with iPXE 
+#
+
+# Basic route name as configured in the 'Filename' option on the DHCP server.
+get '/redirect' do
+
+  host = request.host
+  response = settings.default_response
+
+  path = "#{settings.link_path}/#{host}"
+  # Verify whether the symlink exist and it's not broken:
+  if File.exist?(path) && File.symlink?(path)
+    response = File.readlink(Pathname.new(path).expand_path)
+    File.delete(path) # remove the symlink
+  else
+   logger.info "Missing #{path}"
+  end
+
+  # redirect node to target configuration
+  logger.info "Redirect #{host} to #{response}"
+  send_file(response)
+
+end
+
+#
+# Installation with pxelinux
+#
+
+# Default route:
+get '/pxelinux.cfg/default' do
+  send_file(settings.public_dir + '/pxelinux.cfg/default')
+end
+
+# ERB template installation:
+get '/pxelinux.cfg/:name' do
+end
+
+# Gracefully handle 404 errors:
+not_found do
+  "The requested route is not available"
+end
+

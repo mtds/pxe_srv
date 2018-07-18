@@ -1,43 +1,62 @@
-# Serving iPXE/pxelinux files over HTTP
+# PXESrv
 
-This small Ruby script will use the Sinatra web framework to serve static files over HTTP.
+**[pxesrv](pxesrv)** is a [Sinatra][01] based HTTP server redirecting client request depending on links to a target response file for a given IP-address.
 
-The server will answer the following HTTP requests, everything else will throw an ``404`` error:
-* ``/menu``: corresponds to an IPXE config file (``menu.ipxe``);
-* ``/IP``: this entry will be created on the fly only for specific purposes and will point to specific files with a symbolic link;
-* ``/pxelinux.cfg/default``: default menu for a pxelinux config boot (for hosts which **does not** support iPXE);
-* ``/pxelinux.cfg/:name``: pxelinux config boot customized as an ERB template.
+Environment       | Description
+------------------|---------------------------
+PXESRV_ROOT       | Path to the HTTP server document root (i.e. [public/](public/))
+PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 
-* The server is designed to serve static files from a specific subfolder, defined in the configuration file.
-* ``pxelinux`` configuration files should be under the ``pxelinux.cfg`` directory.
-
-### Serve iPXE files
-
-* Define the DHCP option ``filename`` as follows: ``http://myserver:myport/menu``
-* Whenever a booting node will contact this server with the previos request, it will receive by **default** a ``menu.ipxe`` file.
-
-In case the node needs to grab a specific iPXE file then you should do the following:
-1. create a symbolic link (in the form of IP address of the booting node) pointing to a specific iPXE file.
-2. once the node is rebooted it will contact the Sinatra server, which will verify if the node IP is matching the symbolic link.
-3. if the match is correct, then we will serve a iPXE file.
-4. otherwise the Sinatra server will serve a default menu file.
-
-There's an **helper script** available, called `create_symlink.rb` which will help to create as many symlinks as necessary.  
-It can be used in combination to ``nodeset`` (part of ``clustershell``) in the following way:
-```
-nodeset --expand node[1-4].mydomain | ruby create_symlink.rb -f /some/file.ipxe
-```
-References:
-* [Nodeset](https://clustershell.readthedocs.io/en/latest/tools/nodeset.html)
-
-## Configuration File
-
-It's in YAML format. An example:
-```
-SrvConfig:
-  public_dir: /srv/pxe_srv/static
-  views: /srv/pxe_srv/views
+```bash
+# load the environment from var/aliases/*.sh 
+>>> source source_me.sh && env | grep ^PXESRV
+# start the service for development and testing in foreground
+>>> $PXESRV_PATH/pxesrv -p 4567
 ```
 
-**NOTE**: YAML is sensible to indentation!! See the example file in the repo.
+By default the response to all clients is redirected to [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another configuration file.
 
+Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04]): 
+
+```bash
+# start a VM to PXE boot from the service
+>>> vm-boot-pxe
+# use ctrl-b to drop into the shell
+# get an IP address
+iPXE> dhcp
+# 10.0.2.2 is the default gateway (aka the host)
+iPXE> chain http://10.0.2.2:4567/redirect
+# ...
+# create a link to another iPXE boot configuration
+>>> mkdir -p $PXESRV_ROOT/link ; \
+    ln -s $PXESRV_ROOT/centos $PXESRV_ROOT/link/10.0.2.2
+# note that the gateway address is the client host address also
+```
+
+Cf. [Qemu Network Emulation][02]
+
+Altnernativly [host the pxesrv service itself in a virtual machine][05].
+
+### Docker Container
+
+Build a container image using the [Dockerfile](Dockerfile) in this repository:
+
+```bash
+# build a docker container image
+docker build -t pxesrv $PXESRV_PATH
+# start the container
+docker run --rm \
+           --detach \
+           --interactive \
+           --tty \
+           --name pxesrv \
+           --publish 4567:4567 \
+           --volume $PXESRV_ROOT:/srv/pxesrv \
+       pxesrv
+```
+
+[01]: http://sinatrarb.com/ "Sinatra home-page"
+[02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
+[03]: https://www.qemu.org/ "Qemu home-page"
+[04]: var/aliases/qemu.sh 
+[05]: docs/test.md

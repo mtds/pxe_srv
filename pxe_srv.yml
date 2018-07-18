@@ -1,3 +1,0 @@
-SrvConfig:
-  public_dir: /srv/pxe_srv/static
-  views: /srv/pxe_srv/views
