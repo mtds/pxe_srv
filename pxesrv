@@ -8,6 +8,9 @@ require 'yaml'
 
 configure do
 
+  # listen on all interfaces
+  set :bind, '0.0.0.0'
+
   config_file = nil
   config_env = 'PXESRV_CONF'
   if ENV.has_key? config_env

@@ -1,6 +1,6 @@
 # PXESrv
 
-**[pxesrv](pxesrv)** is a [Sinatra][01] based HTTP server redirecting client request based on links to a target response file.
+**[pxesrv](pxesrv)** is a [Sinatra][01] based HTTP server redirecting client request depending on links to a target response file for a given IP-address.
 
 Environment       | Description
 ------------------|---------------------------
@@ -43,7 +43,8 @@ docker build -t pxesrv $PXESRV_PATH
 # start the container
 docker run --rm \
            --detach \
-           -it \
+           --interactive \
+           --tty \
            --name pxesrv \
            --publish 4567:4567 \
            --volume $PXESRV_ROOT:/srv/pxesrv \
