@@ -16,10 +16,11 @@ pxesrv-docker-container() {
                    --name $PXESRV_DOCKER_CONTAINER \
                    --publish 4567:4567 \
                    --volume $PXESRV_ROOT:/srv/pxesrv \
+                   --restart=always \
                $PXESRV_DOCKER_CONTAINER
 }
 
-pxesrv-docker-container-clean() {
+pxesrv-docker-container-remove() {
         docker container stop $PXESRV_DOCKER_CONTAINER
         docker container rm $PXESRV_DOCKER_CONTAINER
         docker image rm $PXESRV_DOCKER_CONTAINER

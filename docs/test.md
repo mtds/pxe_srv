@@ -3,7 +3,7 @@ This example uses a virtual machine setup with [vm-tools][01]:
 ```bash
 # start a Debian Stretch virtual machine instance
 vm s debian9 lxcm01
-# prepare the VM
+# installe prerequisites
 vm ex lxcm01 -r '
         # tools to use extra repository over HTTPS
         apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
@@ -13,11 +13,19 @@ vm ex lxcm01 -r '
         add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
         # install components
         apt-get update && apt-get -y install git-core ruby-sinatra docker-ce
-        # clone this repository
-        git clone https://github.com/vpenso/pxesrv
-        # load the repository environment on login
-        echo "source $HOME/pxesrv/source_me.sh" >> $HOME/.bashrc
 '
+# rsync this repo into the VMs /opt
+vm sy lxcm01 -r $PXESRV_PATH :/opt
+# add the repo to the login environment
+vm ex lxcm01 -r 'echo "source /opt/pxesrv/source_me.sh" >> $HOME/.bashrc'
+```
+
+```bash
+# start the service 
+vm ex lxcm01 -r \$PXESRV_PATH/pxesrv
+# ...alternativly...
+# start a service container
+vm ex lxcm01 -r pxesrv-docker-container
 ```
 
 [01]: https://github.com/vpenso/vm-tools

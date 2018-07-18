@@ -67,24 +67,20 @@ end
 # Basic route name as configured in the 'Filename' option on the DHCP server.
 get '/redirect' do
 
-  ip = request.ip
   host = request.host
   response = settings.default_response
 
-  [
-    "#{settings.link_path}/#{host}", 
-    "#{settings.link_path}/#{ip}"
-  ].each do |path|
-    # Verify whether the symlink exist and it's not broken:
-    if File.exist?(path) && File.symlink?(path)
-      response = File.readlink(Pathname.new(path).expand_path)
-      File.delete(path) # remove the symlink
-    else
-      logger.info "Missing #{path}"
-    end
+  path = "#{settings.link_path}/#{host}"
+  # Verify whether the symlink exist and it's not broken:
+  if File.exist?(path) && File.symlink?(path)
+    response = File.readlink(Pathname.new(path).expand_path)
+    File.delete(path) # remove the symlink
+  else
+   logger.info "Missing #{path}"
   end
 
-  logger.info "Redirect ip=#{ip} hostname=#{host} to #{response}"
+  # redirect node to target configuration
+  logger.info "Redirect #{host} to #{response}"
   send_file(response)
 
 end
