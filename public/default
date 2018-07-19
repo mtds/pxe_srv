@@ -1,16 +1,16 @@
 #!ipxe
 
 # Some menu defaults
-set menu-timeout 5
+set menu-timeout 10000
 set submenu-timeout ${menu-timeout}
 isset ${menu-default} || set menu-default exit
 
 :start
 menu iPXE boot menu for ${initiator-iqn}
-
+item netboot              Load netboot.xyz menu
 item centos               Boot CentOS live system
 item --gap --             ------------------------- Advanced options -------------------------------
-item --key c config       Configure settings
+item --key c config       Configure settings [c]
 item shell                Drop to iPXE shell
 item reboot               Reboot system
 item poweroff             Power off system
@@ -42,3 +42,6 @@ exit
 
 :centos
 chain centos
+
+:netboot
+chain http://boot.salstar.sk/menu.ipxe

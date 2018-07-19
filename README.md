@@ -30,8 +30,7 @@ PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04]): 
 
 ```bash
-# start a VM to PXE boot from the service
->>> vm-boot-pxe
+>>> qemu-boot-pxe
 # use ctrl-b to drop into the shell
 # get an IP address
 iPXE> dhcp
@@ -46,7 +45,7 @@ iPXE> chain http://10.0.2.2:4567/redirect
 
 Cf. [Qemu Network Emulation][02]
 
-Altnernativly [host the pxesrv service itself in a virtual machine][05].
+Alternatively [host the pxesrv service itself in a virtual machine][05].
 
 ### Docker Container
 
