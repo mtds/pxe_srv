@@ -67,10 +67,10 @@ end
 # Basic route name as configured in the 'Filename' option on the DHCP server.
 get '/redirect' do
 
-  host = request.host
+  ip = request.ip
   response = settings.default_response
 
-  path = "#{settings.link_path}/#{host}"
+  path = "#{settings.link_path}/#{ip}"
   # Verify whether the symlink exist and it's not broken:
   if File.exist?(path) && File.symlink?(path)
     response = File.readlink(Pathname.new(path).expand_path)
@@ -80,7 +80,7 @@ get '/redirect' do
   end
 
   # redirect node to target configuration
-  logger.info "Redirect #{host} to #{response}"
+  logger.info "Redirect #{ip} to #{response}"
   send_file(response)
 
 end
