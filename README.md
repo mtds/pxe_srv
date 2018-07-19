@@ -1,6 +1,19 @@
 # PXESrv
 
-**[pxesrv](pxesrv)** is a [Sinatra][01] based HTTP server redirecting client request depending on links to a target response file for a given IP-address.
+**[pxesrv](pxesrv)** is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations used to:
+
+* Boot **stateless live systems**
+* Boot into **interactive OS installers** (i.e. [Anaconda][10])
+* Boot into **automatic provisioning** (i.e. [Kickstart][09])
+
+Path            | Description
+----------------|------------------------
+/redirect       | Entry path for all client requests
+/default        | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
+
+By default the response to all clients redirect requests is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another boot configuration. 
+
+Environment variables for the pxesrv service daemon:
 
 Environment       | Description
 ------------------|---------------------------
@@ -13,8 +26,6 @@ PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 # start the service for development and testing in foreground
 >>> $PXESRV_PATH/pxesrv -p 4567
 ```
-
-By default the response to all clients is redirected to [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another configuration file.
 
 Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04]): 
 
@@ -55,8 +66,12 @@ docker run --rm \
        pxesrv
 ```
 
+[00]: http://ipxe.org "iPXE home-page"
 [01]: http://sinatrarb.com/ "Sinatra home-page"
 [02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
 [03]: https://www.qemu.org/ "Qemu home-page"
 [04]: var/aliases/qemu.sh 
 [05]: docs/test.md
+[09]: http://pykickstart.readthedocs.io "Kickstart documentation"
+[10]: https://fedoraproject.org/wiki/Anaconda "Anaconda documentation"
+
