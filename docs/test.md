@@ -40,4 +40,28 @@ vm ex lxcm01 -r '
 vm ex lxcm01 -r pxesrv-docker-container
 ```
 
+PXE boot a client VM instance:
+
+```bash
+# define and start a VM instance 
+vm s debian9 lxdev01
+# configure a VM instance for PXE boot with VNC support
+vm co lxdev01 -NOv -M 2
+# stop, redefine, start VM instance
+vm sh lxdev01 && vm re lxdev01 && vm st lxsdev01
+# open VNC console
+vm v lxdev01
+```
+
+Chainload the configuration from the iPXE shell:
+
+```bash
+# use ctrl-b to drop into the shell
+# get an IP address
+iPXE> dhcp
+# the boot service is running on lxcm01, 10.1.1.7
+iPXE> chain http://10.1.1.7:4567/default
+```
+
+
 [01]: https://github.com/vpenso/vm-tools
