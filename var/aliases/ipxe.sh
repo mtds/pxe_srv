@@ -39,6 +39,7 @@ ipxe-download() {
         done
 }
 
+# kill with Esc+2 (monitor console), `quit` command
 ipxe-qemu-boot() {
         qemu-system-x86_64 \
                 -m 2048 \

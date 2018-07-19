@@ -7,8 +7,8 @@ isset ${menu-default} || set menu-default exit
 
 :start
 menu iPXE boot menu for ${initiator-iqn}
-item netboot              Load netboot.xyz menu
-item centos               Boot CentOS live system
+item sal                  Sal's network boot
+item centos               Kickstart CentOS live system
 item --gap --             ------------------------- Advanced options -------------------------------
 item --key c config       Configure settings [c]
 item shell                Drop to iPXE shell
@@ -40,8 +40,11 @@ goto start
 :exit
 exit
 
+:archlinux
+chain archlinux
+
 :centos
 chain centos
 
-:netboot
-chain http://boot.salstar.sk/menu.ipxe
+:sal
+sanboot http://boot.salstar.sk/ipxe/ipxe.iso
