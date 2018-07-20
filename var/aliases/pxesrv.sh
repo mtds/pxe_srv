@@ -11,6 +11,9 @@ export PXESRV_ROOT \
        PXESRV_VM_INSTANCE
 
 
+#
+# Build and run a pxesrv docker service container instance
+#
 pxesrv-docker-container() {
         # build the container image
         docker build -t $PXESRV_DOCKER_CONTAINER $PXESRV_PATH
@@ -25,6 +28,9 @@ pxesrv-docker-container() {
                $PXESRV_DOCKER_CONTAINER
 }
 
+#
+# Celan up pxesrv docker containers
+#
 pxesrv-docker-container-remove() {
         docker container stop $PXESRV_DOCKER_CONTAINER
         docker container rm $PXESRV_DOCKER_CONTAINER
@@ -53,63 +59,66 @@ pxesrv-vm-service() {
 # Bootstrap a VM instance and start pxesrv in foreground
 #
 pxesrv-vm-service-debug() {
-       	# bootstrap the service
-       	pxesrv-vm-service
-       	# start the service in foreground
-       	vm exec $PXESRV_VM_INSTANCE -r \$PXESRV_PATH/pxesrv
+       # bootstrap the service
+       pxesrv-vm-service
+       # start the service in foreground
+       vm exec $PXESRV_VM_INSTANCE -r \$PXESRV_PATH/pxesrv
 }
 
 #
 # Boostrap a VM instance and start pxesrv with systemd 
 #
 pxesrv-vm-service-systemd-unit() {
-       	# bootstrap the service
-       	pxesrv-vm-service
-	# use systemd to start the service
-	vm exec $PXESRV_VM_INSTANCE -r '
-		# install the service unit file
-		cp $PXESRV_PATH/var/systemd/pxesrv.service /etc/systemd/system/
-		systemctl daemon-reload
-		# link to the document root within this repo
-		ln -s $PXESRV_ROOT /srv/pxesrv
-		systemctl enable --now pxesrv
-		systemctl status pxesrv
-	'
+        # bootstrap the service
+        pxesrv-vm-service
+        # use systemd to start the service
+        vm exec $PXESRV_VM_INSTANCE -r '
+                # install the service unit file
+                cp $PXESRV_PATH/var/systemd/pxesrv.service /etc/systemd/system/
+                systemctl daemon-reload
+                # link to the document root within this repo
+                ln -s $PXESRV_ROOT /srv/pxesrv
+                systemctl enable --now pxesrv
+                systemctl status pxesrv
+        '
 }
 
 #
 # Boostrap a VM instance and start pxesrv in a docker container
 #
 pxesrv-vm-service-docker-container() {
-       	# bootstrap the service
-       	pxesrv-vm-service
-	# start pxesrv in a docker container
-	vm exec $PXESRV_VM_INSTANCE -r '
-		# tools to use extra repository over HTTPS
-		apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
-		# add official Docker GPG keys
-		curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-		# set up the stable repository
-		add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-		# install components
-		apt-get update && apt-get -y install docker-ce
-		# build and run the pxesrv service container
-		pxesrv-docker-container
-	'
+        # bootstrap the service
+        pxesrv-vm-service
+        # start pxesrv in a docker container
+        vm exec $PXESRV_VM_INSTANCE -r '
+                # tools to use extra repository over HTTPS
+                apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
+                # add official Docker GPG keys
+                curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+                # set up the stable repository
+                add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+                # install components
+                apt-get update && apt-get -y install docker-ce
+                # build and run the pxesrv service container
+                pxesrv-docker-container
+        '
 }
 
+#
+# Start a VM instance with PXE boot enable and connect to VNC
+#
 pxesrv-vm-client-pxe-boot() {
         local instance=${1:-lxdev01}
-	# define and start a VM instance 
-	vm shadow $PXESRV_VM_IMAGE $instance
-	vm destroy $instance
+        # define and start a VM instance 
+        vm shadow $PXESRV_VM_IMAGE $instance
+        vm destroy $instance
         # delay reconfigure
         sleep 3
-	# configure a VM instance for PXE boot with VNC support
-	vm config $instance -NOv -M 2
+        # configure a VM instance for PXE boot with VNC support
+        vm config $instance -NOv -M 2
         vm redefine $instance
         vm start $instance
-	# open VNC console
+        # open VNC console
         echo Open VNC connection...
-	vm view $instance &
+        vm view $instance &
 }

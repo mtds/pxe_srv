@@ -27,7 +27,7 @@ PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 >>> $PXESRV_PATH/pxesrv -p 4567
 ```
 
-Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04]): 
+Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04], and [Qemu Network Emulation][02]):
 
 ```bash
 >>> qemu-boot-pxe
@@ -43,7 +43,7 @@ iPXE> chain http://10.0.2.2:4567/redirect
 # note that the gateway address is the client host address also
 ```
 
-Cf. [Qemu Network Emulation][02]
+Download, build and use a custom iPXE version with shell functions defined in [var/aliases/ipxe.sh][07].
 
 ### Systemd Unit
 
@@ -84,6 +84,35 @@ docker run --rm \
        pxesrv
 ```
 
+## Development
+
+File                         | Description
+-----------------------------|------------------------
+[var/aliases/pxesrv.sh][08]  | Collection of shell functions used for development
+
+Docker localhost:
+
+```bash
+# start pxesrv ad docker service container instance
+pxesrv-docker-container
+# clean up all container artifacs of pxesrv
+pxesrv-docker-container-remove
+```
+
+Virtual machines on localhost (cf. [vm-tools][12]):
+
+```bash
+# bootstrap a VM instance and start pxesrv in foreground
+pxesrv-vm-service-debug
+# boostrap a VM instance and start pxesrv with systemd
+pxesrv-vm-service-systemd-unit
+# boostrap a VM instance and start pxesrv in a docker container
+pxesrv-vm-service-docker-container
+# start a VM instance with PXE boot enable and connect to VNC
+pxesrv-vm-client-pxe-boot
+```
+
+
 [00]: http://ipxe.org "iPXE home-page"
 [01]: http://sinatrarb.com/ "Sinatra home-page"
 [02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
@@ -91,6 +120,9 @@ docker run --rm \
 [04]: var/aliases/qemu.sh 
 [05]: docs/test.md
 [06]: var/systemd/pxesrv.service
+[07]: var/aliases/ipxe.sh
+[08]: var/aliases/pxesrv.sh
 [09]: http://pykickstart.readthedocs.io "Kickstart documentation"
 [10]: https://fedoraproject.org/wiki/Anaconda "Anaconda documentation"
 [11]: https://www.freedesktop.org/software/systemd/man/systemd.service.html
+[12]: https://github.com/vpenso/vm-tools "vm-tools home-page"
