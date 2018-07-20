@@ -45,11 +45,30 @@ iPXE> chain http://10.0.2.2:4567/redirect
 
 Cf. [Qemu Network Emulation][02]
 
-Alternatively [host the pxesrv service itself in a virtual machine][05].
+### Systemd Unit
+
+File                 | Description
+---------------------|------------------------
+[pxesrv.service][06] | Example pxesrv systemd service unit file
+
+Use a [systemd service unit][11] to manage the pxesrv daemon:
+
+```bash
+# install the service unit file
+cp $PXESRV_PATH/var/systemd/pxesrv.service /etc/systemd/system/
+systemctl daemon-reload
+# link to the document root within this repo
+ln -s $PXESRV_ROOT /srv/pxesrv
+systemctl enable --now pxesrv
+```
 
 ### Docker Container
 
-Build a container image using the [Dockerfile](Dockerfile) in this repository:
+File                      | Description
+--------------------------|------------------------
+[Dockerfile](Dockerfile)  | Example Docker file to build a pxesrv image
+
+Build a pxesrv Docker container and run i:
 
 ```bash
 # build a docker container image
@@ -71,6 +90,7 @@ docker run --rm \
 [03]: https://www.qemu.org/ "Qemu home-page"
 [04]: var/aliases/qemu.sh 
 [05]: docs/test.md
+[06]: var/systemd/pxesrv.service
 [09]: http://pykickstart.readthedocs.io "Kickstart documentation"
 [10]: https://fedoraproject.org/wiki/Anaconda "Anaconda documentation"
-
+[11]: https://www.freedesktop.org/software/systemd/man/systemd.service.html
