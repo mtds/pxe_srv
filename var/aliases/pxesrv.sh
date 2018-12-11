@@ -110,14 +110,9 @@ pxesrv-vm-service-docker-container() {
 pxesrv-vm-client-pxe-boot() {
         local instance=${1:-lxdev01}
         # define and start a VM instance 
-        vm shadow $PXESRV_VM_IMAGE $instance
-        vm destroy $instance
-        # delay reconfigure
-        sleep 3
-        # configure a VM instance for PXE boot with VNC support
-        vm config $instance -NOv -M 2
-        vm redefine $instance
-        vm start $instance
+        vm shadow --net-boot \
+                  --memory 2 \
+                  $PXESRV_VM_IMAGE $instance
         # open VNC console
         echo Open VNC connection...
         vm view $instance &
