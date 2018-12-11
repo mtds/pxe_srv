@@ -21,6 +21,10 @@ PXESRV_ROOT       | Path to the HTTP server document root (i.e. [public/](public
 PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 
 ```bash
+# install dependencies on Debian
+apt-get install -y ruby-sinatra
+# install dependencies on CentOS
+yum install -y rubygem-sinatra
 # load the environment from var/aliases/*.sh 
 >>> source source_me.sh && env | grep ^PXESRV
 # start the service for development and testing in foreground
