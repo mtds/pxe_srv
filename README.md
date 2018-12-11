@@ -26,9 +26,9 @@ apt-get install -y ruby-sinatra
 # install dependencies on CentOS
 yum install -y rubygem-sinatra
 # load the environment from var/aliases/*.sh 
->>> source source_me.sh && env | grep ^PXESRV
+source source_me.sh && env | grep ^PXESRV
 # start the service for development and testing in foreground
->>> $PXESRV_PATH/pxesrv -p 4567
+$PXESRV_PATH/pxesrv -p 4567
 ```
 
 Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04], and [Qemu Network Emulation][02]):
