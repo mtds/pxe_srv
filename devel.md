@@ -17,13 +17,15 @@ pxesrv-docker-container-remove
 
 Virtual machines on localhost are build with [vm-tools][12].
 
-Bootstrap a VM instance and start pxesrv in foreground:
+### PXESrv Service
+
+Bootstrap a VM instance and start pxesrv in **foreground**:
 
 ```bash
 pxesrv-vm-service-debug
 ```
 
-Bootstrap a VM instance and start `pxesrv` as Systemd service:
+Bootstrap a VM instance and start `pxesrv` as **Systemd service**:
 
 ```
 pxesrv-vm-service-systemd-unit
@@ -31,11 +33,13 @@ pxesrv-vm-service-systemd-unit
 vm ex $PXESRV_VM_INSTANCE -r -- tail -f /var/log/pxesrv.log
 ```
 
-Bootstrap a VM instance and start `pxesrv` in a docker container
+Bootstrap a VM instance and start `pxesrv` in a **Docker container**:
 
 ```bash
 pxesrv-vm-service-docker-container
 ```
+
+### PXE Client
 
 Start a VM instance with PXE boot enable and connect to VNC
 
