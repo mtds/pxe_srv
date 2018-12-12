@@ -1,10 +1,10 @@
-## Development
+# Development
 
 File                         | Description
 -----------------------------|------------------------
 [var/aliases/pxesrv.sh][08]  | Collection of shell functions used for development
 
-Docker localhost:
+Docker on localhost:
 
 ```bash
 # start pxesrv ad docker service container instance
@@ -13,18 +13,46 @@ pxesrv-docker-container
 pxesrv-docker-container-remove
 ```
 
-Virtual machines on localhost (cf. [vm-tools][12]):
+## Virtual Machines
+
+Virtual machines on localhost are build with [vm-tools][12].
+
+Bootstrap a VM instance and start pxesrv in foreground:
 
 ```bash
-# bootstrap a VM instance and start pxesrv in foreground
 pxesrv-vm-service-debug
-# boostrap a VM instance and start pxesrv with systemd
-pxesrv-vm-service-systemd-unit
-# boostrap a VM instance and start pxesrv in a docker container
-pxesrv-vm-service-docker-container
-# start a VM instance with PXE boot enable and connect to VNC
-pxesrv-vm-client-pxe-boot
 ```
+
+Bootstrap a VM instance and start `pxesrv` as Systemd service:
+
+```
+pxesrv-vm-service-systemd-unit
+# check the service log
+vm ex $PXESRV_VM_INSTANCE -r -- tail -f /var/log/pxesrv.log
+```
+
+Bootstrap a VM instance and start `pxesrv` in a docker container
+
+```bash
+pxesrv-vm-service-docker-container
+```
+
+Start a VM instance with PXE boot enable and connect to VNC
+
+```
+pxe-vm-instance
+```
+
+Use **ctrl-b** to access the iPXE shell.
+
+```bash
+# start the network interface
+dhcp
+# query the PXESrv boot server
+chain http://lxcm02.devops.test:4567/redirect
+```
+
+
 
 [08]: var/aliases/pxesrv.sh
 [12]: https://github.com/vpenso/vm-tools "vm-tools home-page"

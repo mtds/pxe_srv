@@ -2,7 +2,7 @@
 
 set mirror http://mirror.centos.org/
 set repo ${mirror}/centos/7/os/x86_64
-set kickstart http://lxcm01.devops.test:4567/kickstart/base
+set kickstart http://lxcm02.devops.test:4567/kickstart/base
 kernel ${repo}/images/pxeboot/vmlinuz initrd=initrd.img ip=dhcp inst.repo=${repo} inst.text inst.sshd ks=${kickstart}
 initrd ${repo}/images/pxeboot/initrd.img
 echo Boot with Kickstart for ${net0.dhcp/hostname} (${net0.dhcp/ip})
