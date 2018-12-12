@@ -20,9 +20,11 @@ Environment       | Description
 PXESRV_ROOT       | Path to the HTTP server document root (i.e. [public/](public/))
 PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 
+The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
+
 ```bash
 # install dependencies on Debian
-apt-get install -y ruby-sinatra
+apt install -y ruby-sinatra
 # install dependencies on CentOS
 yum install -y rubygem-sinatra
 # load the environment from var/aliases/*.sh 
