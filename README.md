@@ -15,7 +15,7 @@ apt install -y ruby-sinatra
 yum install -y rubygem-sinatra
 ```
 
-### PXESrv Service Deamon 
+### Service Deamon 
 
 Environment variables for the pxesrv service daemon:
 
