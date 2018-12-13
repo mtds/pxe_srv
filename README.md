@@ -4,10 +4,13 @@
 
 * Boot into **interactive OS installers**  like [CentOS Anaconda][10] or [Debian Installer](https://www.debian.org/releases/stable/amd64/index.html.en)
 * Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
-* Redirect to provisioning services like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
-* Boot **stateless live systems**
+* **Redirect to provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 
-The sub-directory [public/](public/) contains an **example iPXE configuration**.
+The sub-directory **[`public/`](public/) contains an example iPXE configuration**.
+
+The main purpose of the pxesrv service is to **redirect incomming client request once to a desired boot target**. 
+
+### Service Deamon 
 
 ```bash
 # install dependencies on Debian
@@ -16,14 +19,12 @@ apt install -y ruby-sinatra
 yum install -y rubygem-sinatra
 ```
 
-### Service Deamon 
-
 **Environment variables** for the pxesrv service daemon:
 
 Environment       | Description
 ------------------|---------------------------
-PXESRV_ROOT       | Path to the HTTP server document root (i.e. [public/](public/))
-PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
+PXESRV_ROOT       | Path to the HTTP server **document root** (i.e. [public/](public/))
+PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 
 The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
 
