@@ -6,12 +6,16 @@
 * Boot into **interactive OS installers** (i.e. [Anaconda][10])
 * Boot into **automatic provisioning** (i.e. [Kickstart][09])
 
-Path            | Description
-----------------|------------------------
-/redirect       | Entry path for all client requests
-/default        | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
 
-By default the response to all clients redirect requests is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another boot configuration. 
+
+```bash
+# install dependencies on Debian
+apt install -y ruby-sinatra
+# install dependencies on CentOS
+yum install -y rubygem-sinatra
+```
+
+### PXESrv Service Deamon 
 
 Environment variables for the pxesrv service daemon:
 
@@ -23,15 +27,19 @@ PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
 The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
 
 ```bash
-# install dependencies on Debian
-apt install -y ruby-sinatra
-# install dependencies on CentOS
-yum install -y rubygem-sinatra
 # load the environment from var/aliases/*.sh 
 source source_me.sh && env | grep ^PXESRV
 # start the service for development and testing in foreground
 $PXESRV_PATH/pxesrv -p 4567
 ```
+
+By default the **response to all clients `/redirect` requests** is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another boot configuration. 
+
+Path            | Description
+----------------|------------------------
+/redirect       | Entry path for all client requests
+/default        | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
+
 
 ### Systemd Unit
 

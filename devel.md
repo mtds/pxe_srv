@@ -4,9 +4,7 @@ Files                        | Description
 -----------------------------|------------------------
 [var/aliases/qemu.sh][04]    | Use Qemu to start a virtual machine with PXE boot
 [var/aliases/pxesrv.sh][08]  | Help functions to bootstrap a PXESrv service in various configurations
-[var/aliases/ipxe.sh][07]    | Help function to build iPXE
-
-Download, build and use a custom iPXE version with shell functions defined in [var/aliases/ipxe.sh][07].
+[var/aliases/ipxe.sh][07]    | Help function to download and build iPXE
 
 ## Docker Container
 
@@ -66,7 +64,7 @@ pxesrv-vm-instance-docker-container
 ### PXE Client
 
 
-Start a VM instance with PXE boot enable and connect to VNC (cf. [vm-tools][12])
+Start a VM instance with PXE boot enable and connect to VNC:
 
 ```
 pxe-vm-instance
