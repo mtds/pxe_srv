@@ -4,8 +4,9 @@
 
 Files                             | Description
 ----------------------------------|--------------------------------------------
-[default](default)              | Default boot menu (includes [SAL's Network Boot][sal])
-[centos](centos)                | Boot CentOS Anaconda with a custom Kickstart configuration
+[default](default)                | Default boot menu (includes [SAL's Network Boot][sal])
+[centos/](centos/)                | Boot CentOS Anaconda with a custom Kickstart configuration
+[debian/](debian/)                | Boot Debian-Installer with a custom Preseed configuration
 
 Build custom iPXE from the [source code][ipxesrc] using functions from [var/aliases/ipxe.sh][ipxefunc]
 

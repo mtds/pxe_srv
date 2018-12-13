@@ -8,7 +8,8 @@ isset ${menu-default} || set menu-default exit
 :start
 menu iPXE boot menu for ${initiator-iqn}
 item sal                  Sal's network boot
-item centos               Kickstart CentOS live system
+item centos               Kickstart CentOS default installation
+item debian               Preseed Debian default installation
 item --gap --             ------------------------- Advanced options -------------------------------
 item --key c config       Configure settings [c]
 item shell                Drop to iPXE shell
@@ -44,7 +45,10 @@ exit
 chain archlinux
 
 :centos
-chain centos
+chain centos/7/default
+
+:debian
+chain debian/9/default
 
 :sal
 sanboot http://boot.salstar.sk/ipxe/ipxe.iso
