@@ -1,0 +1,11 @@
+#!ipxe
+
+set server http://deb.debian.org/debian
+set repo ${server}/dists/stretch/main/installer-amd64/current/images/netboot/debian-installer/amd64/
+set seed http://lxcm02.devops.test:4567/debian/9/default.seed
+
+initrd ${repo}/initrd.gz
+kernel ${repo}/linux auto=true priority=critical url=${seed}
+
+boot
+

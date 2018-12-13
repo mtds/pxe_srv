@@ -1,8 +1,0 @@
-#!ipxe
-
-set repo http://deb.debian.org/debian/dists/stretch/main/installer-amd64/current/images/netboot/debian-installer/amd64/
-set preseed http://lxcm02.devops.test:4567/debian/p/preseed.cfg
-kernel ${repo}/linux initrd=initrd.img ip=dhcp auto=true url=${preseed}
-initrd ${repo}/initrd.gz
-echo Boot Debian-Installer for ${net0.dhcp/hostname} (${net0.dhcp/ip})
-boot || goto shell
