@@ -6,9 +6,9 @@ PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurat
 * Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
 * **Redirect to provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 
-This service **redirects incomming client request once to a desired boot target**. 
+This service **redirects incomming client request once to a desired boot configuration**. 
 
-The sub-directory **[`public/`](public/) contains an example iPXE configuration**.
+The sub-directory ↴ **[`public/`](public/) contains an example iPXE configuration**.
 
 ### Service Deamon 
 
@@ -33,28 +33,27 @@ The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this re
 source source_me.sh && env | grep ^PXESRV
 ```
 
-**Start the **[`pxesrv`](pxesrv)** service deamon**
+**Start the ↴ **[`pxesrv`](pxesrv)** service deamon**
 
 ```bash
 # start the service for development and testing in foreground
 $PXESRV_PATH/pxesrv -p 4567
 ```
 
-By default the **response to all clients `/redirect` requests** is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another boot configuration. 
+By default the **response to all clients `/redirect` requests** is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the **IP-address of the client node references another boot configuration**.
 
 Path            | Description
 ----------------|------------------------
 /redirect       | Entry path for all client requests
 /default        | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
 
-
 ### Systemd Unit
 
 File                             | Description
 ---------------------------------|------------------------
-[var/systemd/pxesrv.service][06] | Example pxesrv systemd service unit file
+[var/systemd/pxesrv.service][06] | Example PXESrv systemd service unit file
 
-Use a [systemd service unit][11] to manage the pxesrv daemon:
+Use a [systemd service unit][11] to manage the `pxesrv` daemon:
 
 ```bash
 # install the service unit file
@@ -69,9 +68,9 @@ systemctl enable --now pxesrv
 
 File                      | Description
 --------------------------|------------------------
-[Dockerfile](Dockerfile)  | Example Docker file to build a pxesrv image
+[Dockerfile](Dockerfile)  | Example Docker file to build a PXESrv image
 
-Build a pxesrv Docker container and start it:
+Build a PXESrv Docker container and start it:
 
 ```bash
 # build a docker container image
