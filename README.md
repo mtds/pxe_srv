@@ -10,7 +10,7 @@ This service **redirects incomming client request once to a desired boot configu
 
 The sub-directory ↴ **[`public/`](public/) contains an example iPXE configuration**.
 
-### Service Deamon 
+## Service Deamon 
 
 ```bash
 # install dependencies on Debian
@@ -47,7 +47,7 @@ Path            | Description
 /redirect       | Entry path for all client requests
 /default        | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
 
-### Systemd Unit
+## Systemd Unit
 
 File                             | Description
 ---------------------------------|------------------------
@@ -64,7 +64,7 @@ ln -s $PXESRV_ROOT /srv/pxesrv
 systemctl enable --now pxesrv
 ```
 
-### Docker Container
+## Docker Container
 
 File                      | Description
 --------------------------|------------------------

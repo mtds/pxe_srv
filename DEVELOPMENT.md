@@ -53,10 +53,12 @@ pxesrv-vm-instance-debug
 
 Bootstrap a VM instance and start `pxesrv` as **Systemd service**:
 
-```
+```bash
 pxesrv-vm-instance-systemd-unit
 # check the service log
 vm ex $PXESRV_VM_INSTANCE -r -- tail -f /var/log/pxesrv.log
+# sync document root after changes
+vm sync $PXESRV_VM_INSTANCE -r $PXESRV_PATH :/opt
 ```
 
 Bootstrap a VM instance and start `pxesrv` in a **Docker container**:

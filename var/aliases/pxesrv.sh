@@ -44,7 +44,7 @@ pxesrv-vm-instance() {
         # start the VM instance for the pxesrv server
         vm shadow $PXESRV_VM_IMAGE $PXESRV_VM_INSTANCE
         # delay the login
-        sleep 3
+        sleep 5
         # install prerequisites
         vm exec $PXESRV_VM_INSTANCE -r -- \
                 apt -y install git-core ruby-sinatra
