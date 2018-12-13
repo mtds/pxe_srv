@@ -1,14 +1,14 @@
 # PXESrv
 
-**[pxesrv](pxesrv)** is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations used to:
+PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations used to:
 
 * Boot into **interactive OS installers**  like [CentOS Anaconda][10] or [Debian Installer](https://www.debian.org/releases/stable/amd64/index.html.en)
 * Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
 * **Redirect to provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 
-The sub-directory **[`public/`](public/) contains an example iPXE configuration**.
+This service **redirects incomming client request once to a desired boot target**. 
 
-The main purpose of the pxesrv service is to **redirect incomming client request once to a desired boot target**. 
+The sub-directory **[`public/`](public/) contains an example iPXE configuration**.
 
 ### Service Deamon 
 
@@ -31,6 +31,11 @@ The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this re
 ```bash
 # load the environment from var/aliases/*.sh 
 source source_me.sh && env | grep ^PXESRV
+```
+
+**Start the **[`pxesrv`](pxesrv)** service deamon**
+
+```bash
 # start the service for development and testing in foreground
 $PXESRV_PATH/pxesrv -p 4567
 ```
