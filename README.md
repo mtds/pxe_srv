@@ -7,6 +7,8 @@
 * Redirect to provisioning services like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 * Boot **stateless live systems**
 
+The sub-directory [public/](public/) contains an **example iPXE configuration**.
+
 ```bash
 # install dependencies on Debian
 apt install -y ruby-sinatra
@@ -16,7 +18,7 @@ yum install -y rubygem-sinatra
 
 ### Service Deamon 
 
-Environment variables for the pxesrv service daemon:
+**Environment variables** for the pxesrv service daemon:
 
 Environment       | Description
 ------------------|---------------------------
@@ -42,9 +44,9 @@ Path            | Description
 
 ### Systemd Unit
 
-File                 | Description
----------------------|------------------------
-[pxesrv.service][06] | Example pxesrv systemd service unit file
+File                             | Description
+---------------------------------|------------------------
+[var/systemd/pxesrv.service][06] | Example pxesrv systemd service unit file
 
 Use a [systemd service unit][11] to manage the pxesrv daemon:
 
@@ -63,7 +65,7 @@ File                      | Description
 --------------------------|------------------------
 [Dockerfile](Dockerfile)  | Example Docker file to build a pxesrv image
 
-Build a pxesrv Docker container and run i:
+Build a pxesrv Docker container and start it:
 
 ```bash
 # build a docker container image
