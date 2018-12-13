@@ -1,16 +1,30 @@
-File                         | Description
+# Development
+
+Files                        | Description
 -----------------------------|------------------------
 [var/aliases/qemu.sh][04]    | Use Qemu to start a virtual machine with PXE boot
 [var/aliases/pxesrv.sh][08]  | Help functions to bootstrap a PXESrv service in various configurations
 [var/aliases/ipxe.sh][07]    | Help function to build iPXE
 
-# Development
+Download, build and use a custom iPXE version with shell functions defined in [var/aliases/ipxe.sh][07].
 
-Use [Qemu][03] to start a local VM with PXE boot enabled( cf.[Qemu Network Emulation][02]):
+## Docker Container
 
+Use Docker on localhost to start the PXESrv container:
 
 ```bash
->>> qemu-boot-pxe
+# start pxesrv ad docker service container instance
+pxesrv-docker-container
+# clean up all container artifacs of pxesrv
+pxesrv-docker-container-remove
+```
+
+Use [Qemu][03] to start a local VM with PXE boot enabled 
+( cf.[Qemu Network Emulation][02]). Connect ot PXESrv 
+instance running on localhost:
+
+```bash
+>>> pxe-qemu-instance
 # use ctrl-b to drop into the shell
 # get an IP address
 iPXE> dhcp
@@ -21,17 +35,6 @@ iPXE> chain http://10.0.2.2:4567/redirect
 >>> mkdir -p $PXESRV_ROOT/link ; \
     ln -s $PXESRV_ROOT/centos $PXESRV_ROOT/link/10.0.2.2
 # note that the gateway address is the client host address also
-```
-
-Download, build and use a custom iPXE version with shell functions defined in [var/aliases/ipxe.sh][07].
-
-Use Docker on localhost to start the PXESrv container:
-
-```bash
-# start pxesrv ad docker service container instance
-pxesrv-docker-container
-# clean up all container artifacs of pxesrv
-pxesrv-docker-container-remove
 ```
 
 ## Virtual Machines
@@ -62,7 +65,8 @@ pxesrv-vm-instance-docker-container
 
 ### PXE Client
 
-Start a VM instance with PXE boot enable and connect to VNC
+
+Start a VM instance with PXE boot enable and connect to VNC (cf. [vm-tools][12])
 
 ```
 pxe-vm-instance

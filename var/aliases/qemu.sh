@@ -9,7 +9,7 @@ export QEMU_PXE_OPTION_ROM \
        QEMU_HOST_IP
 
 # start a VM with a iPXE boot menu
-qemu-boot-pxe() {
+pxe-qemu-instance() {
         echo Kill VM with ctrl-alt-q... 
         qemu-img create -f qcow2 $QEMU_DISK 10G
         qemu-system-x86_64 \
