@@ -40,7 +40,7 @@ pxesrv-docker-container-remove() {
 #
 # Define and start a VM to host the pxesrv service
 #
-pxesrv-vm-service() {
+pxesrv-vm-instance() {
         # start the VM instance for the pxesrv server
         vm shadow $PXESRV_VM_IMAGE $PXESRV_VM_INSTANCE
         # delay the login
@@ -58,9 +58,9 @@ pxesrv-vm-service() {
 #
 # Bootstrap a VM instance and start pxesrv in foreground
 #
-pxesrv-vm-service-debug() {
+pxesrv-vm-instance-debug() {
        # bootstrap the service
-       pxesrv-vm-service
+       pxesrv-vm-instance
        # start the service in foreground
        vm exec $PXESRV_VM_INSTANCE -r \$PXESRV_PATH/pxesrv
 }
@@ -68,9 +68,9 @@ pxesrv-vm-service-debug() {
 #
 # Boostrap a VM instance and start pxesrv with systemd 
 #
-pxesrv-vm-service-systemd-unit() {
+pxesrv-vm-instance-systemd-unit() {
         # bootstrap the service
-        pxesrv-vm-service
+        pxesrv-vm-instance
         # use systemd to start the service
         vm exec $PXESRV_VM_INSTANCE -r '
                 # install the service unit file
@@ -86,9 +86,9 @@ pxesrv-vm-service-systemd-unit() {
 #
 # Boostrap a VM instance and start pxesrv in a docker container
 #
-pxesrv-vm-service-docker-container() {
+pxesrv-vm-instance-docker-container() {
         # bootstrap the service
-        pxesrv-vm-service
+        pxesrv-vm-instance
         # start pxesrv in a docker container
         vm exec $PXESRV_VM_INSTANCE -r '
                 # tools to use extra repository over HTTPS

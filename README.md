@@ -33,24 +33,6 @@ source source_me.sh && env | grep ^PXESRV
 $PXESRV_PATH/pxesrv -p 4567
 ```
 
-Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04], and [Qemu Network Emulation][02]):
-
-```bash
->>> qemu-boot-pxe
-# use ctrl-b to drop into the shell
-# get an IP address
-iPXE> dhcp
-# 10.0.2.2 is the default gateway (aka the host)
-iPXE> chain http://10.0.2.2:4567/redirect
-# ...
-# create a link to another iPXE boot configuration
->>> mkdir -p $PXESRV_ROOT/link ; \
-    ln -s $PXESRV_ROOT/centos $PXESRV_ROOT/link/10.0.2.2
-# note that the gateway address is the client host address also
-```
-
-Download, build and use a custom iPXE version with shell functions defined in [var/aliases/ipxe.sh][07].
-
 ### Systemd Unit
 
 File                 | Description
@@ -92,12 +74,8 @@ docker run --rm \
 
 [00]: http://ipxe.org "iPXE home-page"
 [01]: http://sinatrarb.com/ "Sinatra home-page"
-[02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
-[03]: https://www.qemu.org/ "Qemu home-page"
-[04]: var/aliases/qemu.sh 
 [05]: docs/test.md
 [06]: var/systemd/pxesrv.service
-[07]: var/aliases/ipxe.sh
 [08]: var/aliases/pxesrv.sh
 [09]: http://pykickstart.readthedocs.io "Kickstart documentation"
 [10]: https://fedoraproject.org/wiki/Anaconda "Anaconda documentation"
