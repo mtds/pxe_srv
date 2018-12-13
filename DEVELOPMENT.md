@@ -8,7 +8,9 @@ Files                        | Description
 
 ## Docker Container
 
-Use Docker on localhost to start the PXESrv container:
+Use Docker on localhost to start the PXESrv container.
+
+### Server
 
 ```bash
 # start pxesrv ad docker service container instance
@@ -16,6 +18,8 @@ pxesrv-docker-container
 # clean up all container artifacs of pxesrv
 pxesrv-docker-container-remove
 ```
+
+### Client
 
 Use [Qemu][03] to start a local VM with PXE boot enabled 
 ( cf.[Qemu Network Emulation][02]). Connect ot PXESrv 
@@ -39,7 +43,7 @@ iPXE> chain http://10.0.2.2:4567/redirect
 
 Virtual machines on localhost are build with [vm-tools][12].
 
-### PXESrv Service
+### Server
 
 Bootstrap a VM instance and start pxesrv in **foreground**:
 
@@ -61,7 +65,7 @@ Bootstrap a VM instance and start `pxesrv` in a **Docker container**:
 pxesrv-vm-instance-docker-container
 ```
 
-### PXE Client
+### Client
 
 
 Start a VM instance with PXE boot enable and connect to VNC:

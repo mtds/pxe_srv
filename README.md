@@ -2,11 +2,10 @@
 
 **[pxesrv](pxesrv)** is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations used to:
 
+* Boot into **interactive OS installers**  like [CentOS Anaconda][10] or [Debian Installer](https://www.debian.org/releases/stable/amd64/index.html.en)
+* Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
+* Redirect to provisioning services like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 * Boot **stateless live systems**
-* Boot into **interactive OS installers** (i.e. [Anaconda][10])
-* Boot into **automatic provisioning** (i.e. [Kickstart][09])
-
-
 
 ```bash
 # install dependencies on Debian
