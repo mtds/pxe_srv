@@ -30,11 +30,13 @@ configure do
   end
 
   default_response = "#{root_path}/default"
-  link_path = "#{root_path}/link"
+  once_path = "#{root_path}/once"
+  static_path = "#{root_path}/static"
 
   # Sets the document root for serving static files:
   set :root_path, root_path
-  set :link_path, link_path
+  set :once_path, once_path
+  set :static_path, static_path
   set :default_response, default_response
 
   # Do not show exceptions
@@ -52,7 +54,7 @@ configure do
   use Rack::CommonLogger, log_handel
 
   $stdout.puts "pxesrv_root=#{root_path} pxesrv_log=#{log_file}"
-  $stdout.puts "pxesrv_default_response=#{default_response} pxesrv_link_path#{link_path}"
+  $stdout.puts "pxesrv_default_response=#{default_response} pxesrv_once_path=#{once_path} pxesrv_static_path=#{static_path}"
 end
 
 # Server will always return contents in text format:
@@ -70,13 +72,22 @@ get '/redirect' do
   ip = request.ip
   response = settings.default_response
 
-  path = "#{settings.link_path}/#{ip}"
-  # Verify whether the symlink exist and it's not broken:
-  if File.exist?(path) && File.symlink?(path)
+  # check if the client should be redirected once
+  path = "#{settings.once_path}/#{ip}"
+  if File.symlink?(path)
     response = File.readlink(Pathname.new(path).expand_path)
     File.delete(path) # remove the symlink
+  # check if a static client redirect exists
   else
-   logger.info "Missing #{path}"
+    logger.info "Missing #{path}"
+    # check if a static redirect exists
+    path  = "#{settings.static_path}/#{ip}"
+    if File.exist?(path)
+      # send the client to a static boot configuration
+      response = path
+    else
+      logger.info "Missing #{path}"
+    end
   end
 
   # redirect node to target configuration

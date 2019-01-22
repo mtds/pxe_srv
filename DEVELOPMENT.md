@@ -34,8 +34,7 @@ iPXE> dhcp
 iPXE> chain http://10.0.2.2:4567/redirect
 # ...
 # create a link to another iPXE boot configuration
->>> mkdir -p $PXESRV_ROOT/link ; \
-    ln -s $PXESRV_ROOT/centos $PXESRV_ROOT/link/10.0.2.2
+>>> ln -s $PXESRV_ROOT/centos $PXESRV_ROOT/once/10.0.2.2
 # note that the gateway address is the client host address also
 ```
 
@@ -68,6 +67,13 @@ pxesrv-vm-instance-docker-container
 ```
 
 ### Client
+
+```bash
+vm ex $PXESRV_VM_INSTANCE -r "
+        ln -s \$PXESRV_ROOT/centos/7/default \$PXESRV_ROOT/once/10.1.1.30
+        ls -l \$PXESRV_ROOT/once/
+"
+```
 
 
 Start a VM instance with PXE boot enable and connect to VNC:

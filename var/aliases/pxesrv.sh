@@ -49,7 +49,7 @@ pxesrv-vm-instance() {
         vm exec $PXESRV_VM_INSTANCE -r -- \
                 apt -y install git-core ruby-sinatra
         # rsync this repo into the VMs /opt
-        vm sync $PXESRV_VM_INSTANCE -r $PXESRV_PATH :/opt
+        vm sync $PXESRV_VM_INSTANCE -r $PXESRV_PATH :/opt |:
         # add the repo to the login environment
         vm exec $PXESRV_VM_INSTANCE -r \
                 'echo "source /opt/pxesrv/source_me.sh" >> $HOME/.bashrc'

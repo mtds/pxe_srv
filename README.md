@@ -40,12 +40,13 @@ source source_me.sh && env | grep ^PXESRV
 $PXESRV_PATH/pxesrv -p 4567
 ```
 
-By default the **response to all clients `/redirect` requests** is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the **IP-address of the client node references another boot configuration**.
+By default the **response to all clients `/redirect` requests** is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory [`$PXESRV_ROOT/once/`](public/once/) called like the **IP-address of the client node references another boot configuration**.
 
 Path            | Description
 ----------------|------------------------
 /redirect       | Entry path for all client requests
 /default        | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
+/static         | Static boot configurations
 
 ## Systemd Unit
 
