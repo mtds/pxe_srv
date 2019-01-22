@@ -24,4 +24,4 @@ clearpart --initlabel --all  # overwrite all partitions
 part /     --ondisk=vda --asprimary --fstype=ext4 --size=8192
 part /var  --ondisk=vda             --fstype=ext4 --size=8192
 part /tmp  --ondisk=vda             --fstype=ext4 --size=8192 --maxsize=20480 --grow
-part /srv  --ondisk=vda --asprimary --fstype=ext4 --size=10240                --grow
+part /srv --ondisk=vda --asprimary --fstype=ext4 --size=10240 --grow

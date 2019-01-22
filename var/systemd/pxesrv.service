@@ -4,6 +4,9 @@ Description=PXESrv boot service
 [Service]
 Environment="PXESRV_ROOT=/srv/pxesrv"
 ExecStart=/opt/pxesrv/pxesrv
+StandardOutput=/var/pxesrv
+StandardError=/var/pxesrv
+SyslogIdentifier=pxesrv
 Restart=always
 RestartSec=15
 

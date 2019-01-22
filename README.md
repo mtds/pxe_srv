@@ -1,57 +1,71 @@
 # PXESrv
 
-**[pxesrv](pxesrv)** is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations used to:
+PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations to:
 
-* Boot **stateless live systems**
-* Boot into **interactive OS installers** (i.e. [Anaconda][10])
-* Boot into **automatic provisioning** (i.e. [Kickstart][09])
+* Boot all clients from a **default boot configuration** (boot menu).
+* Persistently boot a **client specific (static) configuration**.
+* **Redirect clients a single time** (once) to a desired boot configuration.
+  - Boot into **interactive OS installers**  like [CentOS Anaconda][10] or [Debian Installer](https://www.debian.org/releases/stable/amd64/index.html.en)
+  - Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
+  - Forward to a **provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 
-Path            | Description
-----------------|------------------------
-/redirect       | Entry path for all client requests
-/default        | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
+The sub-directory ↴ **[`public/`](public/) contains an example iPXE configuration**.
 
-By default the response to all clients redirect requests is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory `$PXESRV_ROOT/link/` called like the IP-address of the client node references another boot configuration. 
-
-Environment variables for the pxesrv service daemon:
-
-Environment       | Description
-------------------|---------------------------
-PXESRV_ROOT       | Path to the HTTP server document root (i.e. [public/](public/))
-PXESRV_LOG        | Path to the log file, defaults to `/var/log/pxesrv.log`
+The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
 
 ```bash
 # load the environment from var/aliases/*.sh 
->>> source source_me.sh && env | grep ^PXESRV
-# start the service for development and testing in foreground
->>> $PXESRV_PATH/pxesrv -p 4567
+source source_me.sh && env | grep ^PXESRV
 ```
 
-Use [Qemu][03] to start a local VM with PXE boot enabled (cf. [var/aliases/qemu.sh][04], and [Qemu Network Emulation][02]):
+## Service Deamon 
 
 ```bash
->>> qemu-boot-pxe
-# use ctrl-b to drop into the shell
-# get an IP address
-iPXE> dhcp
-# 10.0.2.2 is the default gateway (aka the host)
-iPXE> chain http://10.0.2.2:4567/redirect
-# ...
-# create a link to another iPXE boot configuration
->>> mkdir -p $PXESRV_ROOT/link ; \
-    ln -s $PXESRV_ROOT/centos $PXESRV_ROOT/link/10.0.2.2
-# note that the gateway address is the client host address also
+# install dependencies on Debian
+apt install -y ruby-sinatra
+# install dependencies on CentOS
+yum install -y rubygem-sinatra
 ```
 
-Download, build and use a custom iPXE version with shell functions defined in [var/aliases/ipxe.sh][07].
+**Environment variables** for the pxesrv service daemon:
 
-### Systemd Unit
+Environment       | Description
+------------------|---------------------------
+PXESRV_ROOT       | Path to the HTTP server **document root** (i.e. [public/](public/))
+PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 
-File                 | Description
----------------------|------------------------
-[pxesrv.service][06] | Example pxesrv systemd service unit file
+**Start the ↴ **[`pxesrv`](pxesrv)** service deamon**
 
-Use a [systemd service unit][11] to manage the pxesrv daemon:
+```bash
+# start the service for development and testing in foreground
+$PXESRV_PATH/pxesrv -p 4567
+```
+
+By default the **response to all clients `/redirect` requests** is
+
+[`$PXESRV_ROOT/default`](public/default) 
+
+unless a configuration in the directories
+
+[`$PXESRV_ROOT/once/`](public/once/) (symbolic links)  
+[`$PXESRV_ROOT/static/`](public/static/) 
+
+called like the **IP-address of the client** node references another boot configuration.
+
+Path                   | Description
+-----------------------|------------------------
+/redirect              | **Entry path for all client requests**
+/default               | Default response path, unless a client has a specific boot configuration
+/once/{client-ip}      | Redirect a client once to a linked boot configuration
+/static/{client-ip}    | Redirect a client to a specific static boot configurations
+
+## Systemd Unit
+
+File                             | Description
+---------------------------------|------------------------
+[var/systemd/pxesrv.service][06] | Example PXESrv systemd service unit file
+
+Use a [systemd service unit][11] to manage the `pxesrv` daemon:
 
 ```bash
 # install the service unit file
@@ -62,13 +76,13 @@ ln -s $PXESRV_ROOT /srv/pxesrv
 systemctl enable --now pxesrv
 ```
 
-### Docker Container
+## Docker Container
 
 File                      | Description
 --------------------------|------------------------
-[Dockerfile](Dockerfile)  | Example Docker file to build a pxesrv image
+[Dockerfile](Dockerfile)  | Example Docker file to build a PXESrv image
 
-Build a pxesrv Docker container and run i:
+Build a PXESrv Docker container and start it:
 
 ```bash
 # build a docker container image
@@ -84,43 +98,10 @@ docker run --rm \
        pxesrv
 ```
 
-## Development
-
-File                         | Description
------------------------------|------------------------
-[var/aliases/pxesrv.sh][08]  | Collection of shell functions used for development
-
-Docker localhost:
-
-```bash
-# start pxesrv ad docker service container instance
-pxesrv-docker-container
-# clean up all container artifacs of pxesrv
-pxesrv-docker-container-remove
-```
-
-Virtual machines on localhost (cf. [vm-tools][12]):
-
-```bash
-# bootstrap a VM instance and start pxesrv in foreground
-pxesrv-vm-service-debug
-# boostrap a VM instance and start pxesrv with systemd
-pxesrv-vm-service-systemd-unit
-# boostrap a VM instance and start pxesrv in a docker container
-pxesrv-vm-service-docker-container
-# start a VM instance with PXE boot enable and connect to VNC
-pxesrv-vm-client-pxe-boot
-```
-
-
 [00]: http://ipxe.org "iPXE home-page"
 [01]: http://sinatrarb.com/ "Sinatra home-page"
-[02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
-[03]: https://www.qemu.org/ "Qemu home-page"
-[04]: var/aliases/qemu.sh 
 [05]: docs/test.md
 [06]: var/systemd/pxesrv.service
-[07]: var/aliases/ipxe.sh
 [08]: var/aliases/pxesrv.sh
 [09]: http://pykickstart.readthedocs.io "Kickstart documentation"
 [10]: https://fedoraproject.org/wiki/Anaconda "Anaconda documentation"

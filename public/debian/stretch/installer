@@ -1,0 +1,9 @@
+#!ipxe
+
+set server http://deb.debian.org/debian
+set repo ${server}/dists/stretch/main/installer-amd64/current/images/netboot/debian-installer/amd64/
+initrd ${repo}/initrd.gz
+kernel ${repo}/linux
+
+boot
+
