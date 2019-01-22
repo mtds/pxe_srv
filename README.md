@@ -1,10 +1,13 @@
 # PXESrv
 
-PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations used to:
+PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations to:
 
-* Boot into **interactive OS installers**  like [CentOS Anaconda][10] or [Debian Installer](https://www.debian.org/releases/stable/amd64/index.html.en)
-* Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
-* **Redirect to provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
+* Boot all clients from a **default boot configuration** (boot menu).
+* Persistently boot a **client specific (static) configuration**.
+* **Redirect clients a single time** (once) to a desired boot configuration.
+  - Boot into **interactive OS installers**  like [CentOS Anaconda][10] or [Debian Installer](https://www.debian.org/releases/stable/amd64/index.html.en)
+  - Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
+  - Forward to a **provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 
 This service **redirects incomming client request once to a desired boot configuration**. 
 
