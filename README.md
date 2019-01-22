@@ -54,9 +54,9 @@ called like the **IP-address of the client** node references another boot config
 
 Path                   | Description
 -----------------------|------------------------
-/default               | Default response path, unless a client has a configuration in `$PXESRV_ROOT/link/`
+/redirect              | **Entry path for all client requests**
+/default               | Default response path, unless a client has a specific boot configuration
 /once/{client-ip}      | Redirect a client once to a linked boot configuration
-/redirect              | Entry path for all client requests
 /static/{client-ip}    | Redirect a client to a specific static boot configurations
 
 ## Systemd Unit
