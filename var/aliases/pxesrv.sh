@@ -3,6 +3,7 @@ PXESRV_LOG=/tmp/pxesrv.log
 PXESRV_DOCKER_CONTAINER=pxesrv
 PXESRV_VM_IMAGE=debian9
 PXESRV_VM_INSTANCE=lxcm02
+PXE_VM_INSTANCE=lxdev01
 
 export PXESRV_ROOT \
        PXESRV_LOG \
@@ -108,7 +109,7 @@ pxesrv-vm-instance-docker-container() {
 # Start a VM instance with PXE boot enable and connect to VNC
 #
 pxe-vm-instance() {
-        local instance=${1:-lxdev01}
+        local instance=${1:-$PXE_VM_INSTANCE}
         # define and start a VM instance 
         vm shadow --net-boot \
                   --memory 2 \

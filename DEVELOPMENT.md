@@ -70,7 +70,7 @@ pxesrv-vm-instance-docker-container
 
 ```bash
 vm ex $PXESRV_VM_INSTANCE -r "
-        ln -s \$PXESRV_ROOT/centos/7/default \$PXESRV_ROOT/once/10.1.1.30
+        ln -s \$PXESRV_ROOT/centos/7/default \$PXESRV_ROOT/once/$(vm ip $PXE_VM_INSTANCE)
         ls -l \$PXESRV_ROOT/once/
 "
 ```
