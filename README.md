@@ -41,7 +41,16 @@ PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 $PXESRV_PATH/pxesrv -p 4567
 ```
 
-By default the **response to all clients `/redirect` requests** is [`$PXESRV_ROOT/default`](public/default) (i.e. a iPXE menu configuration). Unless a symbolic link in the directory [`$PXESRV_ROOT/once/`](public/once/) called like the **IP-address of the client node references another boot configuration**.
+By default the **response to all clients `/redirect` requests** is
+
+[`$PXESRV_ROOT/default`](public/default) 
+
+unless a configuration in the directories
+
+[`$PXESRV_ROOT/once/`](public/once/) (symbolic links)  
+[`$PXESRV_ROOT/static/`](public/static/) 
+
+called like the **IP-address of the client** node references another boot configuration.
 
 Path                   | Description
 -----------------------|------------------------
