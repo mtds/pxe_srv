@@ -1,2 +1,4 @@
 public/ipxe.*
 public/test
+public/static/*
+public/once/*
