@@ -1,4 +1,4 @@
-PXESRV_ROOT=$PXESRV_PATH/public
+PXESRV_ROOT=${PXESRV_ROOT:-$PXESRV_PATH/public}
 PXESRV_LOG=/tmp/pxesrv.log
 PXESRV_DOCKER_CONTAINER=pxesrv
 PXESRV_VM_IMAGE=debian9
@@ -47,10 +47,13 @@ pxesrv-vm-instance() {
         # delay the login
         sleep 5
         # install prerequisites
-        vm exec $PXESRV_VM_INSTANCE -r -- \
-                apt -y install git-core ruby-sinatra
+        echo Install Sinatra...
+        vm exec $PXESRV_VM_INSTANCE -r -- 'apt -yq install git-core ruby-sinatra &>/dev/null'
         # rsync this repo into the VMs /opt
         vm sync $PXESRV_VM_INSTANCE -r $PXESRV_PATH :/opt |:
+
+        echo "Copy $PXESRV_ROOT to $PXESRV_VM_INSTANCE:/srv/pxesrv"
+        vm sync $PXESRV_VM_INSTANCE -r $PXESRV_ROOT/ :/srv/pxesrv |:
         # add the repo to the login environment
         vm exec $PXESRV_VM_INSTANCE -r \
                 'echo "source /opt/pxesrv/source_me.sh" >> $HOME/.bashrc'
@@ -63,7 +66,8 @@ pxesrv-vm-instance-debug() {
        # bootstrap the service
        pxesrv-vm-instance
        # start the service in foreground
-       vm exec $PXESRV_VM_INSTANCE -r \$PXESRV_PATH/pxesrv
+       vm exec $PXESRV_VM_INSTANCE -r 'PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv'
+
 }
 
 #
@@ -78,7 +82,6 @@ pxesrv-vm-instance-systemd-unit() {
                 cp $PXESRV_PATH/var/systemd/pxesrv.service /etc/systemd/system/
                 systemctl daemon-reload
                 # link to the document root within this repo
-                ln -s $PXESRV_ROOT /srv/pxesrv
                 systemctl enable --now pxesrv
                 systemctl status pxesrv
         '
