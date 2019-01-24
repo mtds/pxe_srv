@@ -41,6 +41,12 @@ pxesrv-docker-container-remove() {
 #
 # Define and start a VM to host the pxesrv service
 #
+pxesrv-vm-sync-root() {
+        echo "Copy $PXESRV_ROOT to $PXESRV_VM_INSTANCE:/srv/pxesrv"
+        vm sync $PXESRV_VM_INSTANCE -r $PXESRV_ROOT/ :/srv/pxesrv |:
+
+}
+
 pxesrv-vm-instance() {
         # start the VM instance for the pxesrv server
         vm shadow $PXESRV_VM_IMAGE $PXESRV_VM_INSTANCE
@@ -51,9 +57,7 @@ pxesrv-vm-instance() {
         vm exec $PXESRV_VM_INSTANCE -r -- 'apt -yq install git-core ruby-sinatra &>/dev/null'
         # rsync this repo into the VMs /opt
         vm sync $PXESRV_VM_INSTANCE -r $PXESRV_PATH :/opt |:
-
-        echo "Copy $PXESRV_ROOT to $PXESRV_VM_INSTANCE:/srv/pxesrv"
-        vm sync $PXESRV_VM_INSTANCE -r $PXESRV_ROOT/ :/srv/pxesrv |:
+        pxesrv-vm-sync-root
         # add the repo to the login environment
         vm exec $PXESRV_VM_INSTANCE -r \
                 'echo "source /opt/pxesrv/source_me.sh" >> $HOME/.bashrc'
