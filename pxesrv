@@ -35,6 +35,7 @@ configure do
 
   # Sets the document root for serving static files:
   set :root_path, root_path
+  set :public_folder, root_path
   set :once_path, once_path
   set :static_path, static_path
   set :default_response, default_response
@@ -53,8 +54,8 @@ configure do
   log_handel.sync = true
   use Rack::CommonLogger, log_handel
 
-  $stdout.puts "pxesrv_root=#{root_path} pxesrv_log=#{log_file}"
-  $stdout.puts "pxesrv_default_response=#{default_response} pxesrv_once_path=#{once_path} pxesrv_static_path=#{static_path}"
+  $stdout.puts "pxesrv_root=#{root_path}\npxesrv_log=#{log_file}"
+  $stdout.puts "pxesrv_default_response=#{default_response}\npxesrv_once_path=#{once_path}\npxesrv_static_path=#{static_path}"
 end
 
 # Server will always return contents in text format:
