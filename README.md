@@ -67,8 +67,6 @@ $PXESRV_PATH/pxesrv -p 4567
 
 ### Usage
 
-The sub-directory ↴ **[`public/`](public/) contains an example iPXE configuration**.
-
 By default the **response to all clients `/redirect` requests** is
 
 [`$PXESRV_ROOT/default`](public/default) 
@@ -87,9 +85,17 @@ Path                   | Description
 /once/{client-ip}      | Redirect a client once to a linked boot configuration
 /static/{client-ip}    | Redirect a client to a specific static boot configuration
 
+### Configuration
+
+The sub-directory ↴ [`public/`](public/), aka `$PXESRV_ROOT` contains an example iPXE configuration.
+
+Reference examples in [centos/README.md](public/centos/README.md) or [debian/README.md](public/debian/README.md) illustrate installation with Anaconda/Kickstart or Debain-Installer/Pressed respectively.
+
 ### Development
 
 Please refer to [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions.
+
+The document referenced above will also help to setup a test-environment in order to get fammiliar with the service.
 
 ## Deployment
 
