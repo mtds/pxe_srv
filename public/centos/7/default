@@ -1,9 +1,5 @@
 #!ipxe
-
-set mirror http://mirror.centos.org/
-set repo ${mirror}/centos/7/os/x86_64
-set kickstart http://lxcm02.devops.test:4567/centos/7/default.ks
-kernel ${repo}/images/pxeboot/vmlinuz initrd=initrd.img ip=dhcp inst.repo=${repo} inst.text inst.sshd ks=default.ks
-initrd ${repo}/images/pxeboot/initrd.img
+kernel http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/vmlinuz inst.repo=http://mirror.centos.org/centos/7/os/x86_64 inst.text inst.sshd ks=http://10.1.1.8:4567/centos/7/default.ks ip=dhcp
+initrd http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/initrd.img
 echo Boot with Kickstart for ${net0.dhcp/hostname} (${net0.dhcp/ip})
 boot || goto shell

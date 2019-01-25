@@ -1,4 +1,5 @@
 PXESRV_ROOT=${PXESRV_ROOT:-$PXESRV_PATH/public}
+PXESRV_PORT=${PXESRV_PORT:-4567}
 PXESRV_LOG=/tmp/pxesrv.log
 PXESRV_DOCKER_CONTAINER=pxesrv
 PXESRV_VM_IMAGE=debian9
@@ -6,6 +7,7 @@ PXESRV_VM_INSTANCE=lxcm02
 PXE_VM_INSTANCE=lxdev01
 
 export PXESRV_ROOT \
+       PXESRV_PORT \
        PXESRV_LOG \
        PXESRV_DOCKER_CONTAINER \
        PXESRV_VM_IMAGE \
@@ -23,7 +25,7 @@ pxesrv-docker-container() {
                    --tty \
                    --interactive \
                    --name $PXESRV_DOCKER_CONTAINER \
-                   --publish 4567:4567 \
+                   --publish $PXESRV_PORT:$PXESRV_PORT \
                    --volume $PXESRV_ROOT:/srv/pxesrv \
                    --restart=always \
                $PXESRV_DOCKER_CONTAINER
@@ -70,7 +72,7 @@ pxesrv-vm-instance-debug() {
        # bootstrap the service
        pxesrv-vm-instance
        # start the service in foreground
-       vm exec $PXESRV_VM_INSTANCE -r 'PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv'
+       vm exec $PXESRV_VM_INSTANCE -r 'PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv -p $PXESRV_PORT'
 
 }
 
