@@ -1,30 +1,38 @@
 # Development
 
+Files within this repository configuring the development environment:
+
 Files                        | Description
 -----------------------------|------------------------
 [var/aliases/qemu.sh][04]    | Use Qemu to start a virtual machine with PXE boot
 [var/aliases/pxesrv.sh][08]  | Help functions to bootstrap a PXESrv service in various configurations
 [var/aliases/ipxe.sh][07]    | Help function to download and build iPXE
 
+## Localhost
+
+Start the [`pxesrv`](pxesrv) daemon as foreground process:
+
+```
+$PXESRV_PATH/pxesrv -p $PXESRV_PORT
+```
+
 Build or download [iPXE][ip] from the offical web-page;
 
 ```bash
 # install build dependencies, build iPXE, and install to $PXESRV_ROOT
 ipxe-build-from-source
-# download iPXE to $PXESRV_ROOT
+# ...or download iPXE from the offical source to $PXESRV_ROOT
 ipxe-download
 ```
 
-Use `iPXE.iso` to **test the PXESrv server** instance
+Use `ipxe.iso` as initial rootfs for a KVM VM instance:
 
 ```
-# start the service for testing in foreground
-$PXESRV_PATH/pxesrv
 # start the iPXE.iso in a kvm instance
 ipxe-instance
 # on iPXE interactive prompt...initialize the network
 iPXE> dhcp
-# query the host PXESrv instance
+# query the PXESrv instance on localhost
 iPXE> chain http://127.0.0.1:4567/redirect
 ```
 
@@ -92,18 +100,12 @@ pxesrv-vm-instance-docker-container
 
 ### Client
 
-```bash
-vm ex $PXESRV_VM_INSTANCE -r "
-        ln -s \$PXESRV_ROOT/centos/7/default \$PXESRV_ROOT/once/$(vm ip $PXE_VM_INSTANCE)
-        ls -l \$PXESRV_ROOT/once/
-"
-```
-
-
 Start a VM instance with PXE boot enable and connect to VNC:
 
 ```
-pxe-vm-instance
+pxe-vm-instance lxdev01
+# us the VM instance fore development/testing
+vm r lxdev01 # delete the VM instance 
 ```
 
 Use **ctrl-b** to access the iPXE shell.
@@ -114,8 +116,6 @@ dhcp
 # query the PXESrv boot server
 chain http://lxcm02.devops.test:4567/redirect
 ```
-
-
 
 [02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
 [03]: https://www.qemu.org/ "Qemu home-page"
