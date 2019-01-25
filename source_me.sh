@@ -21,6 +21,9 @@ echo PXESrv in $PXESRV_PATH
 unset __dir
 unset __source
 
+export PATH=$PXESRV_PATH/bin:$PATH
+PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++{if (NR > 1) printf ORS; printf $a[$1]}')
+
 for file in `\ls $PXESRV_PATH/var/aliases/*.sh`
 do 
   source $file
