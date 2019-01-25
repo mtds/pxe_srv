@@ -49,7 +49,7 @@ yum install -y rubygem-sinatra
 
 [si]: https://github.com/sinatra/sinatra
 
-## Service Daemon 
+## PXESrv Service Daemon 
 
 **Environment variables** for the PXESrv service daemon:
 
@@ -85,7 +85,19 @@ Path                   | Description
 /redirect              | **Entry path for all client requests**
 /default               | Default response path, unless a client has a specific boot configuration
 /once/{client-ip}      | Redirect a client once to a linked boot configuration
-/static/{client-ip}    | Redirect a client to a specific static boot configurations
+/static/{client-ip}    | Redirect a client to a specific static boot configuration
+
+### Development
+
+Please refer to [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions.
+
+## Deployment
+
+Currently no packages are build for any Linux distribution.
+
+Deployment is possible from this repository or with a [Docker][dk] container.
+
+[dk]: https://www.docker.com/
 
 ### Systemd Unit
 
