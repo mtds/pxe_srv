@@ -13,8 +13,19 @@ Build or download [iPXE][ip] from the offical web-page;
 ipxe-build-from-source
 # download iPXE to $PXESRV_ROOT
 ipxe-download
+```
+
+Use `iPXE.iso` to **test the PXESrv server** instance
+
+```
+# start the service for testing in foreground
+$PXESRV_PATH/pxesrv
 # start the iPXE.iso in a kvm instance
 ipxe-instance
+# on iPXE interactive prompt...initialize the network
+iPXE> dhcp
+# query the host PXESrv instance
+iPXE> chain http://127.0.0.1:4567/redirect
 ```
 
 [ip]: https://git.ipxe.org/ipxe.git
