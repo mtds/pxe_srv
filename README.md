@@ -2,14 +2,34 @@
 
 PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurations to:
 
-* Boot all clients from a **default boot configuration** (boot menu).
-* Persistently boot a **client specific (static) configuration**.
-* **Redirect clients a single time** (once) to a desired boot configuration.
+* Boot all clients from a **default boot configuration** (boot menu for interactive installers).
+* **Redirect a single time** (once) to a desired boot configuration.
   - Boot into **interactive OS installers**  like [CentOS Anaconda][10] or [Debian Installer](https://www.debian.org/releases/stable/amd64/index.html.en)
   - Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
   - Forward to a **provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
+* Persistently boot a client specific **static redirect** boot configuration:
+  - Chainload external (third party) boot configurations, or provisioning systems like [Foreman][tf] or CoreOS [Matchbox][mb]
+  - Boot stateless, immutable live-systems with [initramfs][ir] and [OverlayFS][of] (to the node main memory (RAM)) 
 
-The sub-directory ↴ **[`public/`](public/) contains an example iPXE configuration**.
+[tf]: https://www.theforeman.org/
+[mb]: https://github.com/coreos/matchbox
+[ir]: https://en.wikipedia.org/wiki/Initial_ramdisk
+[of]: https://en.wikipedia.org/wiki/OverlayFS
+
+PXESrv servers a configuration read from a POSIX file-system (in its document root directory):
+
+* The configuration can be altered creating/editing files in a directory tree (eventually via remote login [SSH][ss], [Clustershell][cs])
+* Easy integration with configuration management systems like [Chef][ch], [Puppet][pp], [CFengine][cf], [Ansible][an], [SaltStack][sl]
+
+[an]: https://www.ansible.com/
+[cf]: https://cfengine.com/
+[ch]: https://www.chef.io
+[cs]: http://cea-hpc.github.io/clustershell
+[pp]: https://puppet.com
+[sl]: https://www.saltstack.com/
+[ss]: https://www.ssh.com/ssh
+
+### Prerequisites
 
 The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
 
@@ -18,7 +38,7 @@ The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this re
 source source_me.sh && env | grep ^PXESRV
 ```
 
-## Service Deamon 
+Install [Sinatra][si] on the hosting node:
 
 ```bash
 # install dependencies on Debian
@@ -27,7 +47,11 @@ apt install -y ruby-sinatra
 yum install -y rubygem-sinatra
 ```
 
-**Environment variables** for the pxesrv service daemon:
+[si]: https://github.com/sinatra/sinatra
+
+## PXESrv Service Daemon 
+
+**Environment variables** for the PXESrv service daemon:
 
 Environment       | Description
 ------------------|---------------------------
@@ -40,6 +64,8 @@ PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 # start the service for development and testing in foreground
 $PXESRV_PATH/pxesrv -p 4567
 ```
+
+### Usage
 
 By default the **response to all clients `/redirect` requests** is
 
@@ -57,9 +83,29 @@ Path                   | Description
 /redirect              | **Entry path for all client requests**
 /default               | Default response path, unless a client has a specific boot configuration
 /once/{client-ip}      | Redirect a client once to a linked boot configuration
-/static/{client-ip}    | Redirect a client to a specific static boot configurations
+/static/{client-ip}    | Redirect a client to a specific static boot configuration
 
-## Systemd Unit
+### Configuration
+
+The sub-directory ↴ [`public/`](public/), aka `$PXESRV_ROOT` contains an example iPXE configuration.
+
+Reference examples in [centos/README.md](public/centos/README.md) or [debian/README.md](public/debian/README.md) illustrate installation with Anaconda/Kickstart or Debain-Installer/Pressed respectively.
+
+### Development
+
+Please refer to [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions.
+
+The document referenced above will also help to setup a test-environment in order to get fammiliar with the service.
+
+## Deployment
+
+Currently no packages are build for any Linux distribution.
+
+Deployment is possible from this repository or with a [Docker][dk] container.
+
+[dk]: https://www.docker.com/
+
+### Systemd Unit
 
 File                             | Description
 ---------------------------------|------------------------
@@ -76,7 +122,7 @@ ln -s $PXESRV_ROOT /srv/pxesrv
 systemctl enable --now pxesrv
 ```
 
-## Docker Container
+### Docker Container
 
 File                      | Description
 --------------------------|------------------------

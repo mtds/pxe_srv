@@ -9,14 +9,15 @@ export QEMU_PXE_OPTION_ROM \
        QEMU_HOST_IP
 
 # start a VM with a iPXE boot menu
-pxe-qemu-instance() {
-        echo Kill VM with ctrl-alt-q... 
+pxe-instance() {
+        echo Kill VM with ctrl-alt-q...
+        sleep 2
         qemu-img create -f qcow2 $QEMU_DISK 10G
-        qemu-system-x86_64 \
-                -m 2G \
-                -boot n \
-                -drive file=$QEMU_DISK,if=virtio,cache=writeback \
-                -netdev user,id=n0,ipv6=off,net=$QEMU_NETOWRK,host=$QEMU_HOST_IP \
-                -device virtio-net,netdev=n0 \
-                -option-rom $QEMU_PXE_OPTION_ROM
+        kvm \
+           -m 2G \
+           -boot n \
+           -drive file=$QEMU_DISK,if=virtio,cache=writeback \
+           -netdev user,id=n0,ipv6=off,net=$QEMU_NETOWRK,host=$QEMU_HOST_IP \
+           -device virtio-net,netdev=n0 \
+           -option-rom $QEMU_PXE_OPTION_ROM
 }

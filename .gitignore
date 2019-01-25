@@ -1,2 +1,5 @@
-public/link
 public/ipxe.*
+public/test
+public/static/*
+public/once/*
+public/centos/7/default*

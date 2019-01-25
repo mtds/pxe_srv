@@ -3,11 +3,11 @@ IPXE_HOME=https://boot.ipxe.org
 IPXE_SOURCE=${IPXE_SOURCE:-/tmp/ipxe}
 
 ipxe-build-from-source() {
-
         # build dependencies on Debian
-        if [ -f /usr/bin/apt ]
+        if command -v apt |:
         then
-               apt -y install \
+               sudo apt -y \
+                       install \
                        build-essential \
                        liblzma-dev \
                        genisoimage \
@@ -24,7 +24,6 @@ ipxe-build-from-source() {
         # clean up
         cd -
         rm -rf $IPXE_SOURCE
-
 }
 
 # download the iPXE roms from the official web-site
@@ -40,8 +39,10 @@ ipxe-download() {
 }
 
 # kill with Esc+2 (monitor console), `quit` command
-ipxe-qemu-boot() {
-        qemu-system-x86_64 \
+ipxe-instance() {
+        echo Access QEMU/monitor with esc-2
+        sleep 2
+        kvm \
                 -m 2048 \
                  --curses \
                 $PXESRV_ROOT/ipxe.iso 
