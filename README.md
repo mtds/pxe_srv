@@ -8,8 +8,26 @@ PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurat
   - Boot into **automatic provisioning** like [CentOS Kickstart][09] or [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
   - Forward to a **provisioning services** like [FAI](http://fai-project.org/) or [Cobbler](http://cobbler.github.io/)
 * Persistently boot a client specific **static redirect** boot configuration:
-  - Chainload external (third party) boot configurations
-  - Boot stateless, immutable live-system (to the node main memory (RAM)) 
+  - Chainload external (third party) boot configurations, or provisioning systems like [Foreman][tf] or CoreOS [Matchbox][mb]
+  - Boot stateless, immutable live-systems with [initramfs][ir] and [OverlayFS][of] (to the node main memory (RAM)) 
+
+[tf]: https://www.theforeman.org/
+[mb]: https://github.com/coreos/matchbox
+[ir]: https://en.wikipedia.org/wiki/Initial_ramdisk
+[of]: https://en.wikipedia.org/wiki/OverlayFS
+
+PXESrv servers a configuration read from a POSIX file-system (in its document root directory):
+
+* The configuration can be altered creating/editing files in a directory tree (eventually via remote login [SSH][ss], [Clustershell][cs])
+* Easy integration with configuration management systems like [Chef][ch], [Puppet][pp], [CFengine][cf], [Ansible][an], [SaltStack][sl]
+
+[an]: https://www.ansible.com/
+[cf]: https://cfengine.com/
+[ch]: https://www.chef.io
+[cs]: http://cea-hpc.github.io/clustershell
+[pp]: https://puppet.com
+[sl]: https://www.saltstack.com/
+[ss]: https://www.ssh.com/ssh
 
 ### Prerequisites
 
