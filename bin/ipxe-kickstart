@@ -25,7 +25,8 @@ SCRIPT=${0##*/}
 HELP=\
 "usage: $SCRIPT [<opts>] URL 
 
-Render an iPXE configuration to install CentOS with Kickstart.
+Render an iPXE configuration to install CentOS with Anaconda
+and Kickstart.
 
 positional arguments:
 

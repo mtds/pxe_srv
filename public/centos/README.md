@@ -2,9 +2,9 @@
 
 File                      | Description
 --------------------------|-----------------------------------------
-[bin/ipxe-kickstart][ik]  | Render an iPXE boot configuration for a target Kickstart file
+[bin/ipxe-kickstart][ik]  | Render an iPXE boot configuration for Kickstart
 
-Render a custom iPXE configuration for a Kickstart [1] file (cf. [default.ks](7/default.ks))
+Render iPXE configuration files with Anaconda boot options [4] to Kickstart [1] an **unattended installation**: 
 
 ```bash
 # using a PXESrv VM instance
@@ -12,6 +12,7 @@ kickstart=http://$(vm ip $PXESRV_VM_INSTANCE):$PXESRV_PORT/centos/7/default.ks
 # create the corresponding file in PXESrv document root
 ipxe-kickstart $kickstart > $PXESRV_ROOT/centos/7/default
 ```
+Cf. Kickstart example file in [default.ks](7/default.ks)
 
 The example above is used with development environment described in [DEVELOPMENT.md][dv].
 
@@ -59,3 +60,6 @@ ipxe-kickstart \
 
 [3] IPXE Configuration Settings  
 <https://ipxe.org/settings>
+
+[4] Anaconda Boot Options  
+<https://github.com/rhinstaller/anaconda/blob/master/docs/boot-options.rst>
