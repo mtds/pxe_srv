@@ -17,6 +17,10 @@ user --name=devops --password=devops --plaintext
 # enable DHPC, no IPv6
 network  --bootproto=dhcp --noipv6
 
+
+# NOTE!
+# /dev/vda is the first detected paravirtualizated disk driver
+# Hence this is a disk configuration for a virtual machine
 zerombr                      # initialize invalid partition table
 ignoredisk --only-use=vda    # ingnore disks except of vda
 clearpart --initlabel --all  # overwrite all partitions
@@ -24,4 +28,4 @@ clearpart --initlabel --all  # overwrite all partitions
 part /     --ondisk=vda --asprimary --fstype=ext4 --size=8192
 part /var  --ondisk=vda             --fstype=ext4 --size=8192
 part /tmp  --ondisk=vda             --fstype=ext4 --size=8192 --maxsize=20480 --grow
-part /srv --ondisk=vda --asprimary --fstype=ext4 --size=10240 --grow
+part /srv  --ondisk=vda --asprimary --fstype=ext4 --size=10240 --grow
