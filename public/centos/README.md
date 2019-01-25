@@ -12,7 +12,7 @@ kickstart=http://$(vm ip $PXESRV_VM_INSTANCE):$PXESRV_PORT/centos/7/default.ks
 # create the corresponding file in PXESrv document root
 ipxe-kickstart $kickstart > $PXESRV_ROOT/centos/7/default
 ```
-Cf. Kickstart example file in [default.ks](7/default.ks)
+Cf. Kickstart example file in [default.ks](7/default.ks) us to install VM instance on `/dev/vda`.
 
 The example above is used with development environment described in [DEVELOPMENT.md][dv].
 
