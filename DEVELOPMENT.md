@@ -6,6 +6,19 @@ Files                        | Description
 [var/aliases/pxesrv.sh][08]  | Help functions to bootstrap a PXESrv service in various configurations
 [var/aliases/ipxe.sh][07]    | Help function to download and build iPXE
 
+Build or download [iPXE][ip] from the offical web-page;
+
+```bash
+# install build dependencies, build iPXE, and install to $PXESRV_ROOT
+ipxe-build-from-source
+# download iPXE to $PXESRV_ROOT
+ipxe-download
+# start the iPXE.iso in a kvm instance
+ipxe-instance
+```
+
+[ip]: https://git.ipxe.org/ipxe.git
+
 ## Docker Container
 
 Use Docker on localhost to start the PXESrv container.
@@ -26,7 +39,7 @@ Use [Qemu][03] to start a local VM with PXE boot enabled
 instance running on localhost:
 
 ```bash
->>> pxe-qemu-instance
+>>> pxe-instance
 # use ctrl-b to drop into the shell
 # get an IP address
 iPXE> dhcp

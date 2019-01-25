@@ -39,8 +39,8 @@ ipxe-download() {
 }
 
 # kill with Esc+2 (monitor console), `quit` command
-ipxe-vm-instance() {
-        echo Access QEMU/monitor with ESC+2
+ipxe-instance() {
+        echo Access QEMU/monitor with esc-2
         sleep 2
         kvm \
                 -m 2048 \

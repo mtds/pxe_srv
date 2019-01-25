@@ -16,6 +16,8 @@ __dir="$( cd -P "$( dirname "$__source" )" && pwd )"
 
 export PXESRV_PATH=$__dir
 
+echo PXESrv in $PXESRV_PATH
+
 unset __dir
 unset __source
 

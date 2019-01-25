@@ -11,6 +11,8 @@ PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurat
 
 The sub-directory ↴ **[`public/`](public/) contains an example iPXE configuration**.
 
+### Prerequisites
+
 The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
 
 ```bash
@@ -18,7 +20,7 @@ The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this re
 source source_me.sh && env | grep ^PXESRV
 ```
 
-## Service Deamon 
+Install [Sinatra][si] on the hosting node:
 
 ```bash
 # install dependencies on Debian
@@ -26,6 +28,10 @@ apt install -y ruby-sinatra
 # install dependencies on CentOS
 yum install -y rubygem-sinatra
 ```
+
+[si]: https://github.com/sinatra/sinatra
+
+## Service Deamon 
 
 **Environment variables** for the pxesrv service daemon:
 
@@ -40,6 +46,8 @@ PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 # start the service for development and testing in foreground
 $PXESRV_PATH/pxesrv -p 4567
 ```
+
+### Usage
 
 By default the **response to all clients `/redirect` requests** is
 
@@ -59,7 +67,7 @@ Path                   | Description
 /once/{client-ip}      | Redirect a client once to a linked boot configuration
 /static/{client-ip}    | Redirect a client to a specific static boot configurations
 
-## Systemd Unit
+### Systemd Unit
 
 File                             | Description
 ---------------------------------|------------------------
@@ -76,7 +84,7 @@ ln -s $PXESRV_ROOT /srv/pxesrv
 systemctl enable --now pxesrv
 ```
 
-## Docker Container
+### Docker Container
 
 File                      | Description
 --------------------------|------------------------
