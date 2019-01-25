@@ -1,3 +1,5 @@
+# Kickstart
+
 File                      | Description
 --------------------------|-----------------------------------------
 [bin/ipxe-kickstart][ik]  | Render an iPXE boot configuration for a target Kickstart file
@@ -15,6 +17,37 @@ The example above is used with development environment described in [DEVELOPMENT
 
 [ik]: ../../bin/ipxe-kickstart
 [dv]: ../../DEVELOPMENT.md
+
+### Custom Command-line
+
+Assemble a kernel command-line with custom options for the network configuration of the Anaconds [2] installer
+
+```bash
+# basic network configuration
+domain=.devops.test
+dns_ip=10.10.0.10
+gateway=10.10.0.1
+netmask=255.255.0.0
+network=10.10.0.0/16
+iface=ib0
+# load the InfiniBand drivers during early boot...
+ib_drivers='rd.driver.post=mlx4_ib,ib_ipoib,ib_umad,rdma_ucm rd.neednet=1 rd.timeout=20 rd.retry=80'
+# use iPXE intermingle variables for node IP-address and name
+# make sure the ib0 InfiniBand interface is configured and used for Kickstart
+ip="ip=\${net0.dhcp/ip}::$gateway:$netmask:\${net0.dhcp/hostname}$domain:$iface:off ks.device=$iface"
+route="rd.route=$network:$gateway:$iface"
+# all custom kernel command-line options
+```
+
+Embed the custom options into an iPXE boot-configuration file:
+
+```bash
+ipxe-kickstart \
+        --cmdline "$ip $ib_drivers nameserver=$dns_ip $route" \
+        --repo http://mirror.centos.org/centos/7/os/x86_64 \
+        http://$(vm ip $PXESRV_VM_INSTANCE):$PXESRV_PORT/centos/7/default.ib.ks \
+        > $PXESRV_ROOT/centos/7/default.ib
+```
 
 ### Reference
 
