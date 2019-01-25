@@ -18,9 +18,9 @@ The example above is used with development environment described in [DEVELOPMENT
 [ik]: ../../bin/ipxe-kickstart
 [dv]: ../../DEVELOPMENT.md
 
-### Custom Command-line
+### Anaconda
 
-Assemble a kernel command-line with custom options for the network configuration of the Anaconds [2] installer
+Assemble a kernel command-line with custom options for the **Anaconda network configuration** [2]:
 
 ```bash
 # basic network configuration
@@ -32,14 +32,14 @@ network=10.10.0.0/16
 iface=ib0
 # load the InfiniBand drivers during early boot...
 ib_drivers='rd.driver.post=mlx4_ib,ib_ipoib,ib_umad,rdma_ucm rd.neednet=1 rd.timeout=20 rd.retry=80'
-# use iPXE intermingle variables for node IP-address and name
+# use iPXE intermingled variables [3] for node IP-address and name
 # make sure the ib0 InfiniBand interface is configured and used for Kickstart
 ip="ip=\${net0.dhcp/ip}::$gateway:$netmask:\${net0.dhcp/hostname}$domain:$iface:off ks.device=$iface"
 route="rd.route=$network:$gateway:$iface"
 # all custom kernel command-line options
 ```
 
-Embed the custom options into an iPXE boot-configuration file:
+Embed the custom kernel command-line into an iPXE boot-configuration file:
 
 ```bash
 ipxe-kickstart \
@@ -56,3 +56,6 @@ ipxe-kickstart \
 
 [2] Anaconda Network Configuration  
 <https://fedoraproject.org/wiki/Anaconda/Network>
+
+[3] IPXE Configuration Settings  
+<https://ipxe.org/settings>
