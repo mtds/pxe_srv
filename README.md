@@ -16,10 +16,10 @@ PXESrv is a [Sinatra][01] HTTP server hosting [iPXE][00] network boot configurat
 [ir]: https://en.wikipedia.org/wiki/Initial_ramdisk
 [of]: https://en.wikipedia.org/wiki/OverlayFS
 
-PXESrv servers a configuration read from a POSIX file-system (in its document root directory):
+PXESrv serves a configuration file, from its document root directory, which is read from a POSIX file-system:
 
-* The configuration can be altered creating/editing files in a directory tree (eventually via remote login [SSH][ss], [Clustershell][cs])
-* Easy integration with configuration management systems like [Chef][ch], [Puppet][pp], [CFengine][cf], [Ansible][an], [SaltStack][sl]
+* The configuration can be altered creating/editing files in a directory tree (eventually via remote login [SSH][ss], [Clustershell][cs]).
+* Easy integration with configuration management systems like [Chef][ch], [Puppet][pp], [CFengine][cf], [Ansible][an], [SaltStack][sl].
 
 [an]: https://www.ansible.com/
 [cf]: https://cfengine.com/
@@ -28,6 +28,37 @@ PXESrv servers a configuration read from a POSIX file-system (in its document ro
 [pp]: https://puppet.com
 [sl]: https://www.saltstack.com/
 [ss]: https://www.ssh.com/ssh
+
+### Motivation
+
+Why using this tool? PXEsrv can be useful in environments where (for whatever reason):
+
+* it's not possible to use external resources (e.g. like those located on big cloud providers like AWS, MS Azure, Google Cloud Platform, etc.);
+* ready-made provisioning solutions from external parties (be them open source or commercial software) cannot be purchased or easily adopted.
+
+**PXEsrv** can be easily integrated on an existing infrastructure when the following services are __already__ in place:
+
+* DNS  (e.g. [ISC BIND](https://www.isc.org/downloads/bind/))
+* DHCP (e.g [ISC DHCP](https://www.isc.org/downloads/dhcp/))
+* HW support for PXE booting
+* IP Management (optional) (e.g. [ONA](https://github.com/opennetadmin/ona), [NetBox from DigitalOcean](https://github.com/digitalocean/netbox), etc.)
+
+The DHCP server must be able to provide an option with the location for network booting (AKA the ``filename`` option), which will then be used to point to the server/virtual machine/container where PXEsrv is running:
+
+``` # An entry from ISC DHCP
+
+host 10.10.10.1 {
+    fixed-address 10.10.10.1;
+    hardware ethernet 00:AA:BB:CC:DD:EE;
+    option host-name "myhost";
+    [...]
+    filename "http://mysrv.domain:4567/";
+}
+```
+
+Once the node to be installed is able to contact PXEsrv, the process will proceed from there and it's up to the admins decide if an interactive installation or an automatic provisioning system should be started.
+
+PXEsrv strives to follow the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle): do a single thing (provides network boot configurations) in the most simple possible way and leave the rest (installation, configuration, etc.) to other tools.
 
 ### Prerequisites
 
