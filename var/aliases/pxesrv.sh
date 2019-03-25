@@ -55,8 +55,10 @@ pxesrv-vm-instance() {
         # install prerequisites
         case "$PXESRV_VM_IMAGE" in
                 debian*)
-                        vm exec $PXESRV_VM_INSTANCE -r -- \
+                        vm exec $PXESRV_VM_INSTANCE -r '
+                                apt update
                                 apt -yq install git-core ruby-sinatra
+                        '
                         ;;
                 centos*)
                         vm exec $PXESRV_VM_INSTANCE -r -- \
@@ -84,7 +86,8 @@ pxesrv-vm-instance-debug() {
        # bootstrap the service
        pxesrv-vm-instance
        # start the service in foreground
-       vm exec $PXESRV_VM_INSTANCE -r 'PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv -p $PXESRV_PORT'
+       vm exec $PXESRV_VM_INSTANCE -r -- \
+               PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv -p $PXESRV_PORT
 
 }
 
@@ -96,6 +99,7 @@ pxesrv-vm-instance-systemd-unit() {
         pxesrv-vm-instance
         # use systemd to start the service
         vm exec $PXESRV_VM_INSTANCE -r '
+                ln -s $PXESRV_PATH/pxesrv /usr/sbin/pxesrv
                 # install the service unit file
                 cp $PXESRV_PATH/var/systemd/pxesrv.service /etc/systemd/system/
                 systemctl daemon-reload

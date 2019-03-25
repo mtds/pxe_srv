@@ -145,11 +145,14 @@ File                             | Description
 Use a [systemd service unit][11] to manage the `pxesrv` daemon:
 
 ```bash
+# link to the service executable (expected by the systemd unit)
+ln -s $PXESRV_PATH/pxesrv /usr/sbin/pxesrv
 # install the service unit file
 cp $PXESRV_PATH/var/systemd/pxesrv.service /etc/systemd/system/
 systemctl daemon-reload
 # link to the document root within this repo
 ln -s $PXESRV_ROOT /srv/pxesrv
+# start the PXESrv using Systemd
 systemctl enable --now pxesrv
 ```
 
