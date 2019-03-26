@@ -1,2 +1,2 @@
 pxesrv /usr/sbin
-var/systemd/pxesrv.service /etc/sytemd/system
+var/systemd/pxesrv.service /etc/systemd/system
