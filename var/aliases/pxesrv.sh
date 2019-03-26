@@ -52,13 +52,27 @@ pxesrv-vm-sync-root() {
 pxesrv-vm-instance() {
         # start the VM instance for the pxesrv server
         vm shadow $PXESRV_VM_IMAGE $PXESRV_VM_INSTANCE
-        # delay the login
-        sleep 5
         # install prerequisites
-        echo Install Sinatra...
-        vm exec $PXESRV_VM_INSTANCE -r -- 'apt -yq install git-core ruby-sinatra &>/dev/null'
+        case "$PXESRV_VM_IMAGE" in
+                debian*)
+                        vm exec $PXESRV_VM_INSTANCE -r '
+                                apt update
+                                apt -yq install git-core ruby-sinatra
+                        '
+                        ;;
+                centos*)
+                        vm exec $PXESRV_VM_INSTANCE -r -- \
+                                yum install -yq epel-release
+                        vm exec $PXESRV_VM_INSTANCE -r -- \
+                                yum install -yq rubygem-sinatra
+                        ;;
+                *)
+                        echo Install Ruby Sinatra!
+                        ;;
+        esac
         # rsync this repo into the VMs /opt
         vm sync $PXESRV_VM_INSTANCE -r $PXESRV_PATH :/opt |:
+        # rsync PXESRV_ROOT into the VM /srv/pxesrv
         pxesrv-vm-sync-root
         # add the repo to the login environment
         vm exec $PXESRV_VM_INSTANCE -r \
@@ -72,7 +86,8 @@ pxesrv-vm-instance-debug() {
        # bootstrap the service
        pxesrv-vm-instance
        # start the service in foreground
-       vm exec $PXESRV_VM_INSTANCE -r 'PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv -p $PXESRV_PORT'
+       vm exec $PXESRV_VM_INSTANCE -r -- \
+               PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv -p $PXESRV_PORT
 
 }
 
@@ -84,6 +99,7 @@ pxesrv-vm-instance-systemd-unit() {
         pxesrv-vm-instance
         # use systemd to start the service
         vm exec $PXESRV_VM_INSTANCE -r '
+                ln -s $PXESRV_PATH/pxesrv /usr/sbin/pxesrv
                 # install the service unit file
                 cp $PXESRV_PATH/var/systemd/pxesrv.service /etc/systemd/system/
                 systemctl daemon-reload
