@@ -1,0 +1,14 @@
+Source: pxesrv
+Section: net
+Priority: optional
+Maintainer: Victor Penso <vic.penso@gmail.com>
+Build-Depends: debhelper (>= 9), dh-systemd
+Standards-Version: 3.9.6
+Homepage: https://github.com/vpenso/pxesrv
+Vcs-Git: https://github.com/vpenso/pxesrv.git
+Vcs-Browser: https://github.com/vpenso/pxesrv
+
+Package: pxesrv
+Architecture: all
+Depends: ruby-sinatra
+Description: PXESrv is a Sinatra HTTP server hosting iPXE network boot configurations

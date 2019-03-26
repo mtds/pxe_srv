@@ -117,19 +117,6 @@ dhcp
 chain http://lxcm02.devops.test:4567/redirect
 ```
 
-# Packages
-
-Build a very simple RPM package with [pxesrv.spec](pxesrv.spec)
-
-```bash
-# install package build tool chain
-yum install -y rpm-build
-# build the package
-rpmbuild  -bb pxesrv.spec
-# show the package content
-rpm -qipl $package
-```
-
 [02]: https://qemu.weilnetz.de/doc/qemu-doc.html#pcsys_005fnetwork "Qemu Network Emulation"
 [03]: https://www.qemu.org/ "Qemu home-page"
 [04]: var/aliases/qemu.sh
