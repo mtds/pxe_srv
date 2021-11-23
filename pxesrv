@@ -32,12 +32,14 @@ configure do
   default_response = "#{root_path}/default"
   once_path = "#{root_path}/once"
   static_path = "#{root_path}/static"
+  grub_path = "#{root_path}/grub"
 
   # Sets the document root for serving static files:
   set :root_path, root_path
   set :public_folder, root_path
   set :once_path, once_path
   set :static_path, static_path
+  set :grub_path, grub_path
   set :default_response, default_response
 
   # Do not show exceptions
@@ -104,6 +106,27 @@ end
 # Default route:
 get '/pxelinux.cfg/default' do
   send_file(settings.public_dir + '/pxelinux.cfg/default')
+end
+
+#
+# Remove a Grub configuration file from the server 
+#
+get '/grub/clear/:version' do
+  response = settings.default_response
+  # convert client IP to hexadecimal notation
+  hex = '%02X%02X%02X%02X' % request.ip.split('.')
+  # construct the target Grub configuration file path
+  path = "#{settings.grub_path}/#{params[:version]}/grub.cfg-#{hex}"
+  logger.debug "grub/clear #{path}"
+  if File.exists?(path) 
+    File.delete(path)
+    status 200
+    body "Delete #{path}"
+  else
+    status 400
+    body "Missing #{path}"
+  end
+
 end
 
 # ERB template installation:
