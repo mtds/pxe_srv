@@ -13,7 +13,7 @@ rpm -qipl $package
 
 ## Debian
 
-Build a Debian package with file in [debian][debian/]:
+Build a Debian package with file in [debian](debian/):
 
 ```bash
 # install package build tool chain

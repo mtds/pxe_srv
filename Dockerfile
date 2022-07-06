@@ -1,8 +1,8 @@
-FROM debian:9
+FROM fedora:36
 
-RUN apt-get update
-RUN apt-get install -y ruby-sinatra
-RUN apt-get clean
+RUN dnf -y update
+RUN dnf -y install rubygem-sinatra
+RUN dnf -y clean all
 RUN mkdir /srv/pxesrv
 
 ADD pxesrv /opt/pxesrv/pxesrv

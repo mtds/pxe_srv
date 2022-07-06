@@ -166,9 +166,9 @@ Build a PXESrv Docker container and start it:
 
 ```bash
 # build a docker container image
-docker build -t pxesrv $PXESRV_PATH
+buildah build -f Dockerfile -t pxesrv
 # start the container
-docker run --rm \
+podman run --rm \
            --detach \
            --interactive \
            --tty \
