@@ -60,17 +60,8 @@ Once the node to be installed is able to contact PXEsrv, the process will procee
 
 PXEsrv strives to follow the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle): do a single thing (provides network boot configurations) in the most simple possible way and leave the rest (installation, configuration, etc.) to other tools.
 
-### Prerequisites
 
-The shell script [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
-
-```bash
-# load the environment from var/aliases/*.sh 
-source source_me.sh && env | grep ^PXESRV
-```
-
-
-## PXESrv Service Daemon 
+## Configuration
 
 **Environment variables** for the PXESrv service daemon:
 
@@ -78,9 +69,6 @@ Environment       | Description
 ------------------|---------------------------
 PXESRV_ROOT       | Path to the HTTP server **document root** (i.e. [public/](public/))
 PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
-
-
-### Usage
 
 By default the **response to all clients `/redirect` requests** is
 
@@ -104,11 +92,13 @@ The sub-directory [`public/`](public/), aka `$PXESRV_ROOT` contains an example i
 
 ## Deployment
 
-Currently no packages are build for any Linux distribution.
+The shell script [source_me.sh](source_me.sh) adds the tool-chain in this
+repository to your shell environment:
 
-Deployment is possible from this repository or with a [Docker][dk] container.
-
-[dk]: https://www.docker.com/
+```bash
+# load the environment from var/aliases/*.sh 
+source source_me.sh && env | grep ^PXESRV
+```
 
 ### Systemd Unit
 
@@ -162,6 +152,12 @@ podman run --rm \
 [11]: https://www.freedesktop.org/software/systemd/man/systemd.service.html
 [12]: https://github.com/vpenso/vm-tools "vm-tools home-page"
 
+### Packages
+
+For Debian take a look to the [debian/](debian/) sub-directory.
+
+Use the [pxesrv.spec](pxesrv.spec) to build an RPM package...
+
 ## Development
 
 Install [Sinatra][si] on the hosting node:
@@ -174,6 +170,7 @@ dnf install -y rubygem-sinatra
 ```
 
 [si]: https://github.com/sinatra/sinatra
+
 
 **Start the ↴ **[`pxesrv`](pxesrv)** service deamon**
 
