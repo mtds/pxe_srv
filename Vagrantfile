@@ -6,11 +6,14 @@ Vagrant.configure("2") do |config|
   config.vm.define "el8" do |config|
     config.vm.hostname = "el8"
     config.vm.box = "almalinux/8"
+    config.vm.synced_folder ".", "/srv/pxesrv", type: "rsync", rsync__exclude: ".git/"
     config.vm.provision "shell", privileged: true , inline: <<-SHELL
       dnf install -y ruby
       gem install sinatra
     SHELL
-    config.vm.synced_folder ".", "/srv/pxesrv", type: "rsync", rsync__exclude: ".git/"
+    config.vm.provision "shell", inline: <<-SHELL
+      echo "source /srv/pxesrv/source_me.sh" >> $HOME/.bashrc
+    SHELL
   end
 
   # Disable automatic box update checking. If you disable this, then

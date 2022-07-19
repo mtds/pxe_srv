@@ -72,30 +72,11 @@ iPXE> chain http://10.0.2.2:4567/redirect
 
 ## Virtual Machines
 
-Virtual machines on localhost are build with [vm-tools][12].
+Use the [Vagrantfile](Vagrantfile) to start virtual machine instances...
 
-### Server
-
-Bootstrap a VM instance and start pxesrv in **foreground**:
-
-```bash
-pxesrv-vm-instance-debug
-```
-
-Bootstrap a VM instance and start `pxesrv` as **Systemd service**:
-
-```bash
-pxesrv-vm-instance-systemd-unit
-# check the service log
-vm ex $PXESRV_VM_INSTANCE -r -- tail -f /var/log/pxesrv.log
-# sync document root to the VM instance after changes
-pxesrv-vm-sync-root
-```
-
-Bootstrap a VM instance and start `pxesrv` in a **Docker container**:
-
-```bash
-pxesrv-vm-instance-docker-container
+```sh
+vagrant up
+vagrant ssh -- 'PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv -p $PXESRV_PORT'
 ```
 
 ### Client
