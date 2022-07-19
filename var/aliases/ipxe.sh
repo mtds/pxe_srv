@@ -45,6 +45,6 @@ ipxe-instance() {
         qemu-system-x86_64 \
                 --enable-kvm \
                 -m 2048 \
-                 --curses \
+                -display curses \
                 $PXESRV_ROOT/ipxe.iso 
 }

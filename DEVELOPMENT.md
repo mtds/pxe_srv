@@ -5,7 +5,6 @@ Files within this repository configuring the development environment:
 Files                        | Description
 -----------------------------|------------------------
 [var/aliases/qemu.sh][04]    | Use Qemu to start a virtual machine with PXE boot
-[var/aliases/pxesrv.sh][08]  | Help functions to bootstrap a PXESrv service in various configurations
 [var/aliases/ipxe.sh][07]    | Help function to download and build iPXE
 
 ## Localhost
@@ -38,23 +37,8 @@ iPXE> chain http://127.0.0.1:4567/redirect
 
 [ip]: https://git.ipxe.org/ipxe.git
 
-## Docker Container
-
-Use Docker on localhost to start the PXESrv container.
-
-### Server
-
-```bash
-# start pxesrv ad docker service container instance
-pxesrv-docker-container
-# clean up all container artifacs of pxesrv
-pxesrv-docker-container-remove
-```
-
-### Client
-
 Use [Qemu][03] to start a local VM with PXE boot enabled 
-( cf.[Qemu Network Emulation][02]). Connect ot PXESrv 
+( cf.[Qemu Network Emulation][02]). Connect to PXESrv 
 instance running on localhost:
 
 ```bash
@@ -102,5 +86,4 @@ chain http://lxcm02.devops.test:4567/redirect
 [03]: https://www.qemu.org/ "Qemu home-page"
 [04]: var/aliases/qemu.sh
 [07]: var/aliases/ipxe.sh
-[08]: var/aliases/pxesrv.sh
 [12]: https://github.com/vpenso/vm-tools "vm-tools home-page"
