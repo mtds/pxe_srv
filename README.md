@@ -58,7 +58,7 @@ host 10.10.10.1 {
     hardware ethernet 00:AA:BB:CC:DD:EE;
     option host-name "myhost";
     [...]
-    filename "http://mysrv.domain:4567/";
+    filename "http://example.fqdn:4567/redirect";
 }
 ```
 
