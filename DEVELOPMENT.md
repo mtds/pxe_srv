@@ -60,7 +60,10 @@ Use the [Vagrantfile](Vagrantfile) to start virtual machine instances...
 
 ```sh
 vagrant up
+# start PXESrv
 vagrant ssh -- 'PXESRV_ROOT=/srv/pxesrv $PXESRV_PATH/pxesrv -p $PXESRV_PORT'
+# ...using the Systemd unit
+vagrant ssh -- sudo systemctl enable --now pxesrv.service
 ```
 
 ### Client

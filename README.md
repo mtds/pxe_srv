@@ -69,16 +69,6 @@ The shell script [source_me.sh](source_me.sh) adds the tool-chain in this reposi
 source source_me.sh && env | grep ^PXESRV
 ```
 
-Install [Sinatra][si] on the hosting node:
-
-```bash
-# install dependencies on Debian
-apt install -y ruby-sinatra
-# install dependencies on Fedora
-dnf install -y rubygem-sinatra
-```
-
-[si]: https://github.com/sinatra/sinatra
 
 ## PXESrv Service Daemon 
 
@@ -89,12 +79,6 @@ Environment       | Description
 PXESRV_ROOT       | Path to the HTTP server **document root** (i.e. [public/](public/))
 PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 
-**Start the ↴ **[`pxesrv`](pxesrv)** service deamon**
-
-```bash
-# start the service for development and testing in foreground
-$PXESRV_PATH/pxesrv -p 4567
-```
 
 ### Usage
 
@@ -116,17 +100,7 @@ Path                   | Description
 /once/{client-ip}      | Redirect a client once to a linked boot configuration
 /static/{client-ip}    | Redirect a client to a specific static boot configuration
 
-### Configuration
-
 The sub-directory [`public/`](public/), aka `$PXESRV_ROOT` contains an example iPXE configuration.
-
-Reference examples in [centos/README.md](public/centos/README.md) or [debian/README.md](public/debian/README.md) illustrate installation with Anaconda/Kickstart or Debain-Installer/Pressed respectively.
-
-### Development
-
-Please refer to [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions.
-
-The document referenced above will also help to setup a test-environment in order to get fammiliar with the service.
 
 ## Deployment
 
@@ -187,3 +161,25 @@ podman run --rm \
 [10]: https://fedoraproject.org/wiki/Anaconda "Anaconda documentation"
 [11]: https://www.freedesktop.org/software/systemd/man/systemd.service.html
 [12]: https://github.com/vpenso/vm-tools "vm-tools home-page"
+
+## Development
+
+Install [Sinatra][si] on the hosting node:
+
+```bash
+# install dependencies on Debian
+apt install -y ruby-sinatra
+# install dependencies on Fedora
+dnf install -y rubygem-sinatra
+```
+
+[si]: https://github.com/sinatra/sinatra
+
+**Start the ↴ **[`pxesrv`](pxesrv)** service deamon**
+
+```bash
+# start the service for development and testing in foreground
+$PXESRV_PATH/pxesrv -p 4567
+```
+
+Please refer to [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions.
