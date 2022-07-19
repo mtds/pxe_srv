@@ -62,7 +62,7 @@ PXEsrv strives to follow the [KISS principle](https://en.wikipedia.org/wiki/KISS
 
 ### Prerequisites
 
-The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
+The shell script [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
 
 ```bash
 # load the environment from var/aliases/*.sh 
@@ -74,8 +74,8 @@ Install [Sinatra][si] on the hosting node:
 ```bash
 # install dependencies on Debian
 apt install -y ruby-sinatra
-# install dependencies on CentOS
-yum install -y rubygem-sinatra
+# install dependencies on Fedora
+dnf install -y rubygem-sinatra
 ```
 
 [si]: https://github.com/sinatra/sinatra
@@ -118,7 +118,7 @@ Path                   | Description
 
 ### Configuration
 
-The sub-directory ↴ [`public/`](public/), aka `$PXESRV_ROOT` contains an example iPXE configuration.
+The sub-directory [`public/`](public/), aka `$PXESRV_ROOT` contains an example iPXE configuration.
 
 Reference examples in [centos/README.md](public/centos/README.md) or [debian/README.md](public/debian/README.md) illustrate installation with Anaconda/Kickstart or Debain-Installer/Pressed respectively.
 

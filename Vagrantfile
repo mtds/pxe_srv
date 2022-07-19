@@ -10,6 +10,9 @@ Vagrant.configure("2") do |config|
   # make sure to load the development repo...
   config.vm.provision "shell", privileged: true, inline: <<-SHELL
     echo "source /srv/pxesrv/source_me.sh" > /etc/profile.d/pxesrv.sh
+    cp /srv/pxesrv/var/systemd/pxesrv.service /etc/systemd/system/
+    ln -s /srv/pxesrv/pxesrv /usr/sbin/pxesrv
+    systemctl daemon-reload
   SHELL
 
   # forward the PXESrv default port

@@ -11,13 +11,13 @@ Files                        | Description
 
 Start the [`pxesrv`](pxesrv) daemon as foreground process:
 
-```
+```sh
 $PXESRV_PATH/pxesrv -p $PXESRV_PORT
 ```
 
 Build or download [iPXE][ip] from the offical web-page;
 
-```bash
+```sh
 # install build dependencies, build iPXE, and install to $PXESRV_ROOT
 ipxe-build-from-source
 # ...or download iPXE from the offical source to $PXESRV_ROOT
@@ -26,7 +26,7 @@ ipxe-download
 
 Use `ipxe.iso` as initial rootfs for a KVM VM instance:
 
-```
+```sh
 # start the iPXE.iso in a kvm instance
 ipxe-instance
 # on iPXE interactive prompt...initialize the network
@@ -41,8 +41,8 @@ Use [Qemu][03] to start a local VM with PXE boot enabled
 ( cf.[Qemu Network Emulation][02]). Connect to PXESrv 
 instance running on localhost:
 
-```bash
->>> pxe-instance
+```sh
+pxe-instance
 # use ctrl-b to drop into the shell
 # get an IP address
 iPXE> dhcp
