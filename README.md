@@ -43,10 +43,16 @@ Why using this tool? PXEsrv can be useful in environments where (for whatever re
 * HW support for PXE booting
 * IP Management (optional) (e.g. [ONA](https://github.com/opennetadmin/ona), [NetBox from DigitalOcean](https://github.com/digitalocean/netbox), etc.)
 
-The DHCP server must be able to provide an option with the location for network booting (AKA the ``filename`` option), which will then be used to point to the server/virtual machine/container where PXEsrv is running:
+## Configuration
 
-``` # An entry from ISC DHCP
+### DHCP
 
+The DHCP server must be able to provide an option with the location for network
+booting (AKA the `filename` option), which will then be used to point to the
+PXEsrv URL:
+
+```sh
+# ISC DHCP configuration example
 host 10.10.10.1 {
     fixed-address 10.10.10.1;
     hardware ethernet 00:AA:BB:CC:DD:EE;
@@ -56,12 +62,11 @@ host 10.10.10.1 {
 }
 ```
 
-Once the node to be installed is able to contact PXEsrv, the process will proceed from there and it's up to the admins decide if an interactive installation or an automatic provisioning system should be started.
+Once the node to be installed is able to contact PXEsrv, the process will
+proceed from there and it's up to the admins decide if an interactive
+installation or an automatic provisioning system should be started.
 
-PXEsrv strives to follow the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle): do a single thing (provides network boot configurations) in the most simple possible way and leave the rest (installation, configuration, etc.) to other tools.
-
-
-## Configuration
+### PXESrv 
 
 **Environment variables** for the PXESrv service daemon:
 
@@ -70,16 +75,16 @@ Environment       | Description
 PXESRV_ROOT       | Path to the HTTP server **document root** (i.e. [public/](public/))
 PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 
-By default the **response to all clients `/redirect` requests** is
+By default the **response to all clients `/redirect` requests** is...
 
 [`$PXESRV_ROOT/default`](public/default) 
 
-unless a configuration in the directories
+...unless a configuration in one of the following directories...
 
 [`$PXESRV_ROOT/once/`](public/once/) (symbolic links)  
 [`$PXESRV_ROOT/static/`](public/static/) 
 
-called like the **IP-address of the client** node references another boot configuration.
+...changes the boot target.
 
 Path                   | Description
 -----------------------|------------------------
@@ -157,6 +162,8 @@ podman run --rm \
 For Debian take a look to the [debian/](debian/) sub-directory.
 
 Use the [pxesrv.spec](pxesrv.spec) to build an RPM package...
+
+Please refer to [PACKAGES.md](PACKAGES.md) for detailed instructions.
 
 ## Development
 
