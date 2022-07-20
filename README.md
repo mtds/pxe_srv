@@ -43,44 +43,30 @@ Why using this tool? PXEsrv can be useful in environments where (for whatever re
 * HW support for PXE booting
 * IP Management (optional) (e.g. [ONA](https://github.com/opennetadmin/ona), [NetBox from DigitalOcean](https://github.com/digitalocean/netbox), etc.)
 
-The DHCP server must be able to provide an option with the location for network booting (AKA the ``filename`` option), which will then be used to point to the server/virtual machine/container where PXEsrv is running:
+## Configuration
 
-``` # An entry from ISC DHCP
+### DHCP
 
+The DHCP server must be able to provide an option with the location for network
+booting (AKA the `filename` option), which will then be used to point to the
+PXEsrv URL:
+
+```sh
+# ISC DHCP configuration example
 host 10.10.10.1 {
     fixed-address 10.10.10.1;
     hardware ethernet 00:AA:BB:CC:DD:EE;
     option host-name "myhost";
     [...]
-    filename "http://mysrv.domain:4567/";
+    filename "http://example.fqdn:4567/redirect";
 }
 ```
 
-Once the node to be installed is able to contact PXEsrv, the process will proceed from there and it's up to the admins decide if an interactive installation or an automatic provisioning system should be started.
+Once the node to be installed is able to contact PXEsrv, the process will
+proceed from there and it's up to the admins decide if an interactive
+installation or an automatic provisioning system should be started.
 
-PXEsrv strives to follow the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle): do a single thing (provides network boot configurations) in the most simple possible way and leave the rest (installation, configuration, etc.) to other tools.
-
-### Prerequisites
-
-The shell script ↴ [source_me.sh](source_me.sh) adds the tool-chain in this repository to your shell environment:
-
-```bash
-# load the environment from var/aliases/*.sh 
-source source_me.sh && env | grep ^PXESRV
-```
-
-Install [Sinatra][si] on the hosting node:
-
-```bash
-# install dependencies on Debian
-apt install -y ruby-sinatra
-# install dependencies on CentOS
-yum install -y rubygem-sinatra
-```
-
-[si]: https://github.com/sinatra/sinatra
-
-## PXESrv Service Daemon 
+### PXESrv 
 
 **Environment variables** for the PXESrv service daemon:
 
@@ -89,25 +75,16 @@ Environment       | Description
 PXESRV_ROOT       | Path to the HTTP server **document root** (i.e. [public/](public/))
 PXESRV_LOG        | Path to the **log file**, defaults to `/var/log/pxesrv.log`
 
-**Start the ↴ **[`pxesrv`](pxesrv)** service deamon**
-
-```bash
-# start the service for development and testing in foreground
-$PXESRV_PATH/pxesrv -p 4567
-```
-
-### Usage
-
-By default the **response to all clients `/redirect` requests** is
+By default the **response to all clients `/redirect` requests** is...
 
 [`$PXESRV_ROOT/default`](public/default) 
 
-unless a configuration in the directories
+...unless a configuration in one of the following directories...
 
 [`$PXESRV_ROOT/once/`](public/once/) (symbolic links)  
 [`$PXESRV_ROOT/static/`](public/static/) 
 
-called like the **IP-address of the client** node references another boot configuration.
+...changes the boot target.
 
 Path                   | Description
 -----------------------|------------------------
@@ -116,25 +93,17 @@ Path                   | Description
 /once/{client-ip}      | Redirect a client once to a linked boot configuration
 /static/{client-ip}    | Redirect a client to a specific static boot configuration
 
-### Configuration
-
-The sub-directory ↴ [`public/`](public/), aka `$PXESRV_ROOT` contains an example iPXE configuration.
-
-Reference examples in [centos/README.md](public/centos/README.md) or [debian/README.md](public/debian/README.md) illustrate installation with Anaconda/Kickstart or Debain-Installer/Pressed respectively.
-
-### Development
-
-Please refer to [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions.
-
-The document referenced above will also help to setup a test-environment in order to get fammiliar with the service.
+The sub-directory [`public/`](public/), aka `$PXESRV_ROOT` contains an example iPXE configuration.
 
 ## Deployment
 
-Currently no packages are build for any Linux distribution.
+The shell script [source_me.sh](source_me.sh) adds the tool-chain in this
+repository to your shell environment:
 
-Deployment is possible from this repository or with a [Docker][dk] container.
-
-[dk]: https://www.docker.com/
+```bash
+# load the environment from var/aliases/*.sh 
+source source_me.sh && env | grep ^PXESRV
+```
 
 ### Systemd Unit
 
@@ -166,9 +135,9 @@ Build a PXESrv Docker container and start it:
 
 ```bash
 # build a docker container image
-docker build -t pxesrv $PXESRV_PATH
+buildah build -f Dockerfile -t pxesrv
 # start the container
-docker run --rm \
+podman run --rm \
            --detach \
            --interactive \
            --tty \
@@ -187,3 +156,34 @@ docker run --rm \
 [10]: https://fedoraproject.org/wiki/Anaconda "Anaconda documentation"
 [11]: https://www.freedesktop.org/software/systemd/man/systemd.service.html
 [12]: https://github.com/vpenso/vm-tools "vm-tools home-page"
+
+### Packages
+
+For Debian take a look to the [debian/](debian/) sub-directory.
+
+Use the [pxesrv.spec](pxesrv.spec) to build an RPM package...
+
+Please refer to [PACKAGES.md](PACKAGES.md) for detailed instructions.
+
+## Development
+
+Install [Sinatra][si] on the hosting node:
+
+```bash
+# install dependencies on Debian
+apt install -y ruby-sinatra
+# install dependencies on Fedora
+dnf install -y rubygem-sinatra
+```
+
+[si]: https://github.com/sinatra/sinatra
+
+
+**Start the ↴ **[`pxesrv`](pxesrv)** service deamon**
+
+```bash
+# start the service for development and testing in foreground
+$PXESRV_PATH/pxesrv -p 4567
+```
+
+Please refer to [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions.

@@ -3,8 +3,9 @@ IPXE_HOME=https://boot.ipxe.org
 IPXE_SOURCE=${IPXE_SOURCE:-/tmp/ipxe}
 
 ipxe-build-from-source() {
+        rm -rf $IPXE_SOURCE
         # build dependencies on Debian
-        if command -v apt |:
+        if command -v apt >/dev/null
         then
                sudo apt -y \
                        install \
@@ -18,12 +19,11 @@ ipxe-build-from-source() {
         git clone $IPXE_SOURCE_REPO $IPXE_SOURCE
         # build iPXE from source
         cd $IPXE_SOURCE/src
-        make |& tee ../build.log
+        make CFLAGS="-Wno-error=format-truncation" |& tee ../build.log
         # copy components to HTTP server document root
         cp -v bin/*.{iso,usb,pxe,lkrn} $PXESRV_ROOT/
         # clean up
         cd -
-        rm -rf $IPXE_SOURCE
 }
 
 # download the iPXE roms from the official web-site
@@ -40,10 +40,11 @@ ipxe-download() {
 
 # kill with Esc+2 (monitor console), `quit` command
 ipxe-instance() {
-        echo Access QEMU/monitor with esc-2
+        echo Access QEMU/monitor with Esc-2
         sleep 2
-        kvm \
+        qemu-system-x86_64 \
+                --enable-kvm \
                 -m 2048 \
-                 --curses \
+                -display curses \
                 $PXESRV_ROOT/ipxe.iso 
 }
